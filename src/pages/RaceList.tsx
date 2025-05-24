@@ -86,7 +86,7 @@ export function RaceList() {
     return (
         <Box sx={{ px: '60px' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                <Typography variant='h4' component='h1' color='green'>
+                <Typography variant='h4' component='h1'>
                     Race List
                 </Typography>
                 {isAuthenticated && (
