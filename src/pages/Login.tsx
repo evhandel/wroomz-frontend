@@ -83,7 +83,7 @@ export function Login() {
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isLoading}
                         >
-                            {isLoading ? <CircularProgress size={24} /> : 'Log In'}
+                            {isLoading ? <CircularProgress size={24} color='error' /> : 'Log In'}
                         </Button>
                         <Box sx={{ textAlign: 'center' }}>
                             <Link to='/register' style={{ textDecoration: 'none' }}>

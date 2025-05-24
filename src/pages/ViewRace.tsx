@@ -24,7 +24,7 @@ export function ViewRace() {
     if (isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                <CircularProgress />
+                <CircularProgress color='error' />
             </Box>
         );
     }
