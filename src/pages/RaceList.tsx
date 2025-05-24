@@ -70,7 +70,7 @@ export function RaceList() {
     if (isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, px: '60px' }}>
-                <CircularProgress />
+                <CircularProgress color='error' />
             </Box>
         );
     }
