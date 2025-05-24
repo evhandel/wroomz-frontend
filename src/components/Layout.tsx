@@ -41,7 +41,7 @@ export function Layout({ children }: LayoutProps) {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <AppBar position='static'>
+            <AppBar position='static' sx={{ minWidth: 1000 }}>
                 <Toolbar sx={{ px: 0 }}>
                     <Box
                         component='img'
@@ -92,6 +92,7 @@ export function Layout({ children }: LayoutProps) {
                     py: 3,
                     px: 2,
                     mt: 'auto',
+                    minWidth: 1000,
                     backgroundColor: (theme) =>
                         theme.palette.mode === 'light'
                             ? theme.palette.grey[200]
