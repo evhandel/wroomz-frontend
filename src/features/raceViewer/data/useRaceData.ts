@@ -8,11 +8,6 @@ export const useRaceData = (raceId: string) => {
     queryKey: ["race", raceId],
     queryFn: () => api.races.getById(raceId),
     select: (data) => {
-      console.log(
-        "%c * API REQUEST data",
-        "background: #000; color: aqua",
-        data
-      );
       if (
         !data.details?.calculatedData ||
         !data.details?.results ||

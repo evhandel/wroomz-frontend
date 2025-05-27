@@ -7,14 +7,13 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import { teamFirstFinish } from '../../data/teamFirstFinish';
 import { useRaceData } from '../../data/useRaceData';
 
 //         P1 Team 15 (Kuzovov, Barinov) 192 laps, +10s penalty, 5 pitstops
 const Results: FC<ResultsProps> = ({ raceId = '' }) => {
     const { data: raceData, isLoading } = useRaceData(raceId);
 
-    console.log('%c * raceData', 'background: #000; color: aqua', raceData);
+    console.log('%c * Results -> raceData', 'background: #000; color: aqua', raceData);
 
     // If no data is available yet, show loading or empty state
     if (isLoading || !raceData || !raceData.results || raceData.results.length === 0) {
@@ -32,6 +31,17 @@ const Results: FC<ResultsProps> = ({ raceId = '' }) => {
         0
     );
 
+    // Find the team with the minimum total time among teams that completed the max laps
+    const fastestTeamOnTrackTime = raceData.results
+        .filter((result) => result.laps === maxLaps)
+        .reduce(
+            (minTime, result) =>
+                result.totalTimeWithGapWithoutPenalties < minTime
+                    ? result.totalTimeWithGapWithoutPenalties
+                    : minTime,
+            Number.MAX_VALUE
+        );
+
     return (
         <ResultsWrapper>
             <h2>Race results:</h2>
@@ -39,13 +49,21 @@ const Results: FC<ResultsProps> = ({ raceId = '' }) => {
                 <Table>
                     <TableBody>
                         {raceData.results.map((result, index) => {
-                            console.log('%c * result', 'background: #000; color: aqua');
+                            console.log(
+                                '%c * result',
+                                'background: #000; color: aqua',
+                                result.teamNumber,
+                                result.laps,
+                                maxLaps,
+                                result.totalTimeWithGapWithoutPenalties,
+                                fastestTeamOnTrackTime
+                            );
                             const time =
                                 result.totalTimeWithGapWithoutPenalties ===
-                                teamFirstFinish.elapsedTime ? (
+                                fastestTeamOnTrackTime ? (
                                     <b>{result.laps} laps</b>
                                 ) : result.laps === maxLaps ? (
-                                    `+${Math.round(result.totalTimeWithGapWithoutPenalties - teamFirstFinish.elapsedTime)} s`
+                                    `+${Math.round(result.totalTimeWithGapWithoutPenalties - fastestTeamOnTrackTime)} s`
                                 ) : (
                                     `+${maxLaps - result.laps} laps`
                                 );

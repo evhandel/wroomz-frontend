@@ -1,6 +1,5 @@
 import { useRaceData } from '../../data/useRaceData';
 import { colors } from '../../data/common';
-import { teamFirstFinish } from '../../data/teamFirstFinish';
 
 // Hook to get chart data from backend
 export const useDeltaTimesChartData = (raceId: string) => {
@@ -16,7 +15,20 @@ export const useDeltaTimesChartData = (raceId: string) => {
 
     const labels = Array.from({ length: maxLaps }, (_, i) => i + 1);
 
-    const winnerElapsedTimesByLaps = raceDataFromApi.stintsAnalysis[teamFirstFinish.no].reduce<
+    // Find the fastest team on the track (first place finisher excl. penalties)
+    const fastestTeam = raceDataFromApi.results
+        .filter((result) => result.laps === maxLaps)
+        .reduce(
+            (fastest, result) =>
+                result.totalTimeWithGapWithoutPenalties < fastest.totalTimeWithGapWithoutPenalties
+                    ? result
+                    : fastest,
+            raceDataFromApi.results[0]
+        );
+
+    const winnerTeamNumber = fastestTeam.teamNumber;
+
+    const winnerElapsedTimesByLaps = raceDataFromApi.stintsAnalysis[winnerTeamNumber].reduce<
         number[]
     >((acc, stintData) => {
         return [...acc, ...stintData.laps.map((lapData) => lapData.elapsedTime)];
