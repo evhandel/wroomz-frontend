@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -14,10 +14,10 @@ import {
 import { Line } from 'react-chartjs-2';
 import { Root } from './DeltaTimesChart.styles';
 import { useDeltaTimesChartData } from './DeltaTimesChart.data';
-import { externalTooltipHandler } from './DeltaTimesChart.tooltip';
+import { externalTooltipHandler, setLapByLapData } from './DeltaTimesChart.tooltip';
 import { useParams } from 'react-router-dom';
 import { useRaceData } from '../../data/useRaceData';
-import { log } from 'console';
+import { useLapByLap } from '../../data/lapByLap';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -36,6 +36,14 @@ const DeltaTimesChart = () => {
     const { id = '' } = useParams<{ id: string }>();
     const { data: raceData } = useRaceData(id);
     const chartData = useDeltaTimesChartData(id);
+    const lapByLapData = useLapByLap(id);
+
+    // Set the lap by lap data for the tooltip
+    useEffect(() => {
+        if (lapByLapData && lapByLapData.length > 0) {
+            setLapByLapData(lapByLapData);
+        }
+    }, [lapByLapData]);
 
     console.log('%c * chartData', 'background: #000; color: aqua', chartData);
 

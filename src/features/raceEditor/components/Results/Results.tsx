@@ -24,7 +24,7 @@ const Results: FC<ResultsProps> = ({ results }) => {
                 //       ? `+${Math.round(maxTotalTimeWithGapWithoutPenalties - result.totalTimeWithGapWithoutPenalties)} s`
                 //       : `+${maxLaps - result.laps} laps`;
 
-                const penaltyPrefix = result.penalty > 0 ? '+' : result.penalty === 0 ? '' : '-';
+                const penaltyPrefix = result.penalty > 0 ? '+' : '';
                 const penaltyPostfix = result.penalty >= 0 ? 'penalty' : 'compensation';
                 const penaltyString = `${penaltyPrefix}${Math.round(result.penalty)}s ${penaltyPostfix}`;
                 const penaltyElement = result.penalty > 0 ? <Red>{penaltyString}</Red> : <Green>{penaltyString}</Green>;

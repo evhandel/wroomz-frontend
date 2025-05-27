@@ -6,11 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { minLapTime } from '../../data/minLapTime';
 import { StyledTableCell } from './StintsTable.styles';
 import { useStints } from './StintsTable.data';
 import ComboTableCell from './components/ComboTableCell/ComboTableCell';
-import { lapByLap } from '../../data/lapByLap';
 import { useParams } from 'react-router-dom';
 import { useRaceData } from '../../data/useRaceData';
 
@@ -24,6 +22,20 @@ const StintsTable: React.FC = () => {
     const fastestBest = 9999;
     let fastestAvg = 9999;
     let fastestPit = 9999;
+    let minLapTime = 999;
+
+    // Calculate minimum lap time from backend data
+    if (data?.stintsAnalysis) {
+        for (let teamNumber in data.stintsAnalysis) {
+            data.stintsAnalysis[teamNumber].forEach((stint) =>
+                stint.laps.forEach((lapData) => {
+                    if (lapData.time < minLapTime) {
+                        minLapTime = lapData.time;
+                    }
+                })
+            );
+        }
+    }
 
     stints.forEach((stintByTeams) => {
         stintByTeams.forEach((stint) => {

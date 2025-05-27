@@ -1,7 +1,13 @@
-import { log } from 'console';
-import { lapByLap } from '../../data/lapByLap';
-import { getOrCreateTooltip } from '../../helpers/chartsTooltip';
 import { Chart } from 'chart.js';
+import { getOrCreateTooltip } from '../../helpers/chartsTooltip';
+
+// Store lapByLap data globally
+let lapByLapData: any[] = [];
+
+// Set the lap by lap data
+export const setLapByLapData = (data: any[]) => {
+    lapByLapData = data;
+};
 
 export const externalTooltipHandler = (context: { chart: Chart; tooltip: any }) => {
     // Tooltip Element
@@ -61,7 +67,9 @@ export const externalTooltipHandler = (context: { chart: Chart; tooltip: any }) 
             const parsedLabelArray = dataPoint.dataset.label.split(' — ');
             const team = parsedLabelArray ? parsedLabelArray[0] : null;
 
-            const lapData = lapByLap[team] && lapByLap[lapIndex][team];
+            const lapData = team && lapByLapData[lapIndex] && lapByLapData[lapIndex][team];
+
+            if (!lapData) return;
 
             // Get averageLapTimeForWinner from chart object
             const averageLapTimeForWinner = (chart as any).averageLapTimeForWinner || 0;

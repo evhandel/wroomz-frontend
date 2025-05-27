@@ -49,7 +49,7 @@ const ComboTableCell: React.FC<ComboTableCellProps> = (props) => {
                 <StyledSpan
                     fastest={fastestAvg}
                     style={{
-                        color: getAccidentColorForLapTime(props.bestLap, props.minLapTime, 1),
+                        color: !fastestAvg && getAccidentColorForLapTime(props.bestLap, props.minLapTime, 1),
                     }}
                 >
                     {props.avgLapExcludingPitExitLap.toFixed(3)}

@@ -21,9 +21,10 @@ export const getPenaltiesByStintLimit = (
             }
         });
 
-        if (stintsAnalysis[team].length < minStintsQuantity) {
-            penaltiesByStintLimit[team] += 10000;
-        }
+        //TODO add manual DSQ option for team
+        // if (stintsAnalysis[team].length < minStintsQuantity) {
+        //     penaltiesByStintLimit[team] += 10000;
+        // }
     }
 
     return penaltiesByStintLimit;

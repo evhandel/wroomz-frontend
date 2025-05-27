@@ -1,5 +1,4 @@
-import { Chart, TooltipModel, Color } from 'chart.js';
-import { lapByLap } from '../../data/lapByLap';
+import { Chart, TooltipModel } from 'chart.js';
 import { getOrCreateTooltip } from '../../helpers/chartsTooltip';
 
 interface LapData {
@@ -11,6 +10,15 @@ interface LapData {
 }
 
 type LapByLapItem = Record<string, LapData>;
+
+// TODO maybe avoid it
+// Store lapByLap data globally
+let lapByLapData: any[] = [];
+
+// Set the lap by lap data
+export const setLapByLapData = (data: any[]) => {
+    lapByLapData = data;
+};
 
 export const externalTooltipHandler = (context: {
     chart: Chart;
@@ -33,7 +41,7 @@ export const externalTooltipHandler = (context: {
 
         const tableHead = document.createElement('thead');
 
-        titleLines.forEach(title => {
+        titleLines.forEach((title) => {
             const tr = document.createElement('tr');
             tr.style.borderWidth = '0';
 
@@ -73,7 +81,7 @@ export const externalTooltipHandler = (context: {
             const parsedLabelArray = label.split(' — ');
             const team = parsedLabelArray[0] || '';
 
-            const lapData = team && lapByLap[lapIndex] ? lapByLap[lapIndex][team] : null;
+            const lapData = team && lapByLapData[lapIndex] ? lapByLapData[lapIndex][team] : null;
 
             const text = lapData
                 ? document.createTextNode(

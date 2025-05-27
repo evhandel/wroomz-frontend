@@ -37,7 +37,7 @@ export const getPenaltiesByPilotLimit = (
                 if (underseating < 15) {
                     penaltiesByPilotLimit[team] += 15;
                 } else {
-                    penaltiesByPilotLimit[team] += underseating;
+                    penaltiesByPilotLimit[team] += Math.floor(underseating + 1) ;
                 }
             }
         }
