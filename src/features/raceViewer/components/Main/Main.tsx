@@ -1,7 +1,6 @@
 import React from 'react';
 import LapTimesChart from '../LapTimesChart/LapTimesChart';
 import Results from '../Results/Results';
-import { raceData } from '../../data/stintsAnalysis';
 import DeltaTimesChart from '../DeltaTimesChart/DeltaTimesChart';
 import StintsTable from '../StintsTable/StintsTable';
 import LapsTable from '../LapsTable/LapsTable';

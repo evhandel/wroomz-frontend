@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api, Race } from "../../../api/client";
 import { RaceData } from "./stintsAnalysis";
-import { log } from "console";
 
 export const useRaceData = (raceId: string) => {
   return useQuery<Race, Error, RaceData>({

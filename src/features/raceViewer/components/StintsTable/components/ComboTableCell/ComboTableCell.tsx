@@ -1,5 +1,4 @@
 import React from 'react';
-import { StintFormatted } from '../../StintsTable.types';
 import { formatTime } from '../../../../helpers/format';
 import { Label, Root, StyledSpan } from './ComboTableCell.styles';
 import { getBgColorForLapTime, getAccidentColorForLapTime } from '../../../../helpers/colors';

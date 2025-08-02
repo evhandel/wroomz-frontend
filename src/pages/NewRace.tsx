@@ -29,7 +29,6 @@ export function NewRace() {
     const {
         control,
         handleSubmit,
-        formState: { errors },
     } = useForm<NewRaceForm>({
         defaultValues: {
             name: '',

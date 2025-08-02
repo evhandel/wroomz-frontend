@@ -17,7 +17,6 @@ import {
     DialogContentText,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { format, parseISO } from 'date-fns';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

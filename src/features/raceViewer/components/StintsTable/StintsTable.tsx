@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -19,7 +18,6 @@ const StintsTable: React.FC = () => {
 
     const [activeKart, setActiveKart] = useState<string | null>(null);
 
-    const fastestBest = 9999;
     let fastestAvg = 9999;
     let fastestPit = 9999;
     let minLapTime = 999;
@@ -27,13 +25,14 @@ const StintsTable: React.FC = () => {
     // Calculate minimum lap time from backend data
     if (data?.stintsAnalysis) {
         for (const teamNumber in data.stintsAnalysis) {
-            data.stintsAnalysis[teamNumber].forEach((stint) =>
-                stint.laps.forEach((lapData) => {
+            const stints = data.stintsAnalysis[teamNumber];
+            for (const stint of stints) {
+                for (const lapData of stint.laps) {
                     if (lapData.time < minLapTime) {
                         minLapTime = lapData.time;
                     }
-                })
-            );
+                }
+            }
         }
     }
 

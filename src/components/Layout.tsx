@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     AppBar,
     Box,
@@ -7,11 +7,7 @@ import {
     Toolbar,
     Typography,
     Button,
-    Menu,
-    MenuItem,
-    IconButton,
 } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import wroomzLogo from '../assets/wroomz-logo.svg';
@@ -21,13 +17,13 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-    const { isAuthenticated, user, logout } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    // const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
 
     const handleMenuClose = () => {
         setAnchorEl(null);

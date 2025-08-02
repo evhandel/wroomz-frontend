@@ -31,7 +31,8 @@ interface TeamData {
 const CSVUploader: FC<CSVUploaderProps> = (props) => {
     const { setTeamData } = props;
 
-    const [csvData, setCsvData] = useState<CSVDataItem[] | null>(null);
+    // TODO why setCsvData
+    const [, setCsvData] = useState<CSVDataItem[] | null>(null);
 
     // Handle file upload
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {

@@ -21,15 +21,15 @@ import { useLapByLap } from '../../data/lapByLap';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface Dataset {
-    data: number[];
-    label: string;
-    borderColor: string;
-    backgroundColor: string;
-    borderWidth: number;
-    pointRadius: number;
-    pointHoverRadius: number;
-}
+// interface Dataset {
+//     data: number[];
+//     label: string;
+//     borderColor: string;
+//     backgroundColor: string;
+//     borderWidth: number;
+//     pointRadius: number;
+//     pointHoverRadius: number;
+// }
 
 const LapTimesChart = () => {
     const { id = '' } = useParams<{ id: string }>();
@@ -49,15 +49,18 @@ const LapTimesChart = () => {
         if (!raceData?.stintsAnalysis) return 999;
 
         let minTime = 999;
+
         for (const teamNumber in raceData.stintsAnalysis) {
-            raceData.stintsAnalysis[teamNumber].forEach((stint) =>
-                stint.laps.forEach((lapData) => {
+            const stints = raceData.stintsAnalysis[teamNumber];
+            for (const stint of stints) {
+                for (const lapData of stint.laps) {
                     if (lapData.time < minTime) {
                         minTime = lapData.time;
                     }
-                })
-            );
+                }
+            }
         }
+
         return minTime;
     }, [raceData]);
 

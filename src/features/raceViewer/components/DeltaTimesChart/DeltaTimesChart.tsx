@@ -21,16 +21,16 @@ import { useLapByLap } from '../../data/lapByLap';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface Dataset {
-    data: number[];
-    label: string;
-    borderColor: string;
-    backgroundColor: string;
-    borderWidth: number;
-    pointRadius: number;
-    pointHoverRadius: number;
-    cubicInterpolationMode: 'monotone';
-}
+// interface Dataset {
+//     data: number[];
+//     label: string;
+//     borderColor: string;
+//     backgroundColor: string;
+//     borderWidth: number;
+//     pointRadius: number;
+//     pointHoverRadius: number;
+//     cubicInterpolationMode: 'monotone';
+// }
 
 const DeltaTimesChart = () => {
     const { id = '' } = useParams<{ id: string }>();

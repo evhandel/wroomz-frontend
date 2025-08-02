@@ -1,15 +1,13 @@
 import { Chart, TooltipModel } from 'chart.js';
 import { getOrCreateTooltip } from '../../helpers/chartsTooltip';
 
-interface LapData {
-    lapTime: number;
-    elapsedTime: number;
-    pilot: string;
-    stint: number;
-    kart: string;
-}
-
-type LapByLapItem = Record<string, LapData>;
+// interface LapData {
+//     lapTime: number;
+//     elapsedTime: number;
+//     pilot: string;
+//     stint: number;
+//     kart: string;
+// }
 
 // TODO maybe avoid it
 // Store lapByLap data globally
@@ -37,7 +35,6 @@ export const externalTooltipHandler = (context: {
     // Set Text
     if (tooltip.body) {
         const titleLines = tooltip.title || [];
-        const bodyLines = tooltip.body.map((b: { lines: string[] }) => b.lines);
 
         const tableHead = document.createElement('thead');
 
@@ -107,7 +104,7 @@ export const externalTooltipHandler = (context: {
         tableRoot?.appendChild(tableBody);
     }
 
-    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+    const { offsetLeft: positionX } = chart.canvas;
 
     console.log('%c * ', 'background: #000; color: aqua', {
         positionX,

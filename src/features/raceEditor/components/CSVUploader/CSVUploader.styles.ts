@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import Papa from 'papaparse';
 import styled from 'styled-components';
 
 // Define styled components

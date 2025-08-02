@@ -5,14 +5,14 @@ import { Green, Red } from '../common/styles';
 //         P1 Team 15 (Kuzovov, Barinov) 192 laps, +10s penalty, 5 pitstops
 const Results: FC<ResultsProps> = ({ results }) => {
     const leaderStintQuantity = results[0].stintsQuantity;
-    const maxLaps = results.reduce((acc, result) => (result.laps > acc ? result.laps : acc), 0);
-    const maxTotalTimeWithGapWithoutPenalties = results.reduce(
-        (acc, result) =>
-            result.totalTimeWithGapWithoutPenalties > acc && result.laps === maxLaps
-                ? result.totalTimeWithGapWithoutPenalties
-                : acc,
-        0,
-    );
+    // const maxLaps = results.reduce((acc, result) => (result.laps > acc ? result.laps : acc), 0);
+    // const maxTotalTimeWithGapWithoutPenalties = results.reduce(
+    //     (acc, result) =>
+    //         result.totalTimeWithGapWithoutPenalties > acc && result.laps === maxLaps
+    //             ? result.totalTimeWithGapWithoutPenalties
+    //             : acc,
+    //     0,
+    // );
 
     return (
         <ResultsWrapper>

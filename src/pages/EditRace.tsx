@@ -31,7 +31,6 @@ export function EditRace() {
     const {
         control,
         handleSubmit,
-        formState: { errors },
         reset,
     } = useForm<EditRaceForm>({
         defaultValues: {
@@ -46,7 +45,7 @@ export function EditRace() {
         error,
     } = useQuery({
         queryKey: ['race', id],
-        queryFn: () => api.races.getById(id!),
+        queryFn: () => id && api.races.getById(id),
     });
 
     useEffect(() => {
