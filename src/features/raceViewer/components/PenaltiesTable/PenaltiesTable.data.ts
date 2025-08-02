@@ -9,7 +9,7 @@ export const usePenalties = (raceId: string) => {
     const penaltiesByStintLimit: number[] = [];
     const penaltiesByPilotLimit: number[] = [];
 
-    data.results.forEach((result, index) => {
+    data.results.forEach((result) => {
         penaltiesManual.push(data.penalties.penaltiesManual[result.teamNumber] ?? 0);
         penaltiesByStintLimit.push(data.penalties.penaltiesByStintLimit[result.teamNumber] ?? 0);
         penaltiesByPilotLimit.push(data.penalties.penaltiesByPilotLimit[result.teamNumber] ?? 0);

@@ -54,7 +54,7 @@ const Main = ({ onCalculate }: MainProps) => {
         const penaltiesByStintLimit: Record<string, number> = getPenaltiesByStintLimit(
             stintsAnalysis,
             Number(settingsData.maxStint) * 60,
-            Number(settingsData.minStintsQuantity)
+            // Number(settingsData.minStintsQuantity)
         );
         const penaltiesByPilotLimit = getPenaltiesByPilotLimit(
             stintsAnalysis,

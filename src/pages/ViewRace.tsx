@@ -18,7 +18,7 @@ export function ViewRace() {
         error,
     } = useQuery({
         queryKey: ['race', id],
-        queryFn: () => api.races.getById(id!),
+        queryFn: () => id && api.races.getById(id),
     });
 
     if (isLoading) {

@@ -8,7 +8,7 @@ export const useLapTimesArray = (raceId: string) => {
     if (!data) return { lapTimesArray: [] };
 
     const lapTimesArray: string[][] = [];
-    const emptyLapTimesForOneLap = Array.from({ length: data.results.length }, (_, i) => '-');
+    const emptyLapTimesForOneLap = Array.from({ length: data.results.length }, () => '-');
 
     data.results.forEach((result, index) => {
         data.stintsAnalysis[result.teamNumber].forEach(stint => {

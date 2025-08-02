@@ -3,7 +3,7 @@ import { StintAlalysisData } from '../components/Main/Main.types';
 export const getPenaltiesByStintLimit = (
     stintsAnalysis: Record<string, StintAlalysisData[]>,
     maxStintDuration: number,
-    minStintsQuantity: number
+    // minStintsQuantity: number
 ) => {
     const penaltiesByStintLimit: Record<string, number> = {};
 
