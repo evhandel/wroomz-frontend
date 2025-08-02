@@ -7,6 +7,10 @@
     ],
     "rules": {
         "@typescript-eslint/no-unused-vars": "warn",
-        "no-loop-func": "warn"
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "no-loop-func": "warn",
+        "no-useless-catch": "warn",
+        "prefer-const": "warn"
     }
 }
