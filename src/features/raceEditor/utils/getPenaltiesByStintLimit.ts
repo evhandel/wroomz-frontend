@@ -7,7 +7,7 @@ export const getPenaltiesByStintLimit = (
 ) => {
     const penaltiesByStintLimit: Record<string, number> = {};
 
-    for (let team in stintsAnalysis) {
+    for (const team in stintsAnalysis) {
         penaltiesByStintLimit[team] = 0;
 
         stintsAnalysis[team].forEach((stint) => {

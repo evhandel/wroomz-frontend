@@ -41,7 +41,7 @@ export const useDeltaTimesChartData = (raceId: string) => {
     const datasets = [];
     let teamCounter = 0;
 
-    for (let team in raceDataFromApi.stintsAnalysis) {
+    for (const team in raceDataFromApi.stintsAnalysis) {
         let lapCounter = 0;
         const teamData = raceDataFromApi.stintsAnalysis[team].reduce<number[]>((acc, stintData) => {
             return [

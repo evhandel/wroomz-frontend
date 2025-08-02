@@ -67,7 +67,7 @@ const Main = ({ onCalculate }: MainProps) => {
         setPenaltiesByPilotLimit(penaltiesByPilotLimit);
         // END OF stints analysis
 
-        for (let teamNumber in raceData) {
+        for (const teamNumber in raceData) {
             teamDataExtended[teamNumber] = {
                 ...raceData[teamNumber],
                 totalTime: 0,
@@ -75,7 +75,7 @@ const Main = ({ onCalculate }: MainProps) => {
             };
         }
 
-        for (let teamNumber in raceData) {
+        for (const teamNumber in raceData) {
             const totalLapsTime = raceData[teamNumber].laps.reduce((acc, cur) => {
                 return acc + cur.lapTime;
             }, 0);
@@ -91,7 +91,7 @@ const Main = ({ onCalculate }: MainProps) => {
         }
 
         const orderedTeams = [];
-        for (let teamNumber in teamDataExtended) {
+        for (const teamNumber in teamDataExtended) {
             const team = teams.find((team) => team.name === teamNumber);
             orderedTeams.push({
                 avgTimeTotal: teamDataExtended[teamNumber].avgTimeTotal,
@@ -143,6 +143,7 @@ const Main = ({ onCalculate }: MainProps) => {
             onCalculate(calculationData);
         }
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore //TODO FIXME
         setResults(orderedTeams);
     };

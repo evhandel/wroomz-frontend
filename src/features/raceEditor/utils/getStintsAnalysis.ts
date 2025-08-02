@@ -8,7 +8,7 @@ export const getStintsAnalysis = (
 ) => {
     const stintsAnalysis: Record<string, StintAlalysisData[]> = {};
 
-    for (let teamNumber in raceData) {
+    for (const teamNumber in raceData) {
         stintsAnalysis[teamNumber] = [];
 
         let currentStint = 1;
@@ -54,7 +54,7 @@ export const getStintsAnalysis = (
                         ? (lapsDuration - currentStintData.startGap) / currentStintData.laps.length
                         : (lapsDuration - currentStintData.laps[0].time) /
                           (currentStintData.laps.length - 1);
-                let bestLap = currentStintData.laps.reduce(
+                const bestLap = currentStintData.laps.reduce(
                     (acc, lap) => (lap.time < acc ? lap.time : acc),
                     9999
                 );
@@ -115,8 +115,8 @@ export const getStintsAnalysis = (
         stintsAnalysis[teamNumber].push(currentStintData);
     }
 
-    for (let teamNumber in stintsAnalysis) {
-        let currentStintIndex = stintsAnalysis[teamNumber].length - 1;
+    for (const teamNumber in stintsAnalysis) {
+        const currentStintIndex = stintsAnalysis[teamNumber].length - 1;
 
         const currentStintData = stintsAnalysis[teamNumber][currentStintIndex];
 
@@ -125,7 +125,7 @@ export const getStintsAnalysis = (
                 currentStintData.startGap -
                 currentStintData.laps[0].time) /
             (currentStintData.laps.length - 1);
-        let bestLap = currentStintData.laps.reduce(
+        const bestLap = currentStintData.laps.reduce(
             (acc, lap) => (lap.time < acc ? lap.time : acc),
             9999
         );

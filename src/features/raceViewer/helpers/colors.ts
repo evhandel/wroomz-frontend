@@ -16,7 +16,7 @@ export const getMutedColorForLapTime = (time: number, fastestTime: number) => {
     }
 };
 
-export const getLightColorForLapTime = (time: number, fastestTime: number, alpha: number = 1) => {
+export const getLightColorForLapTime = (time: number, fastestTime: number, alpha = 1) => {
     const diff = time - fastestTime;
 
     if (diff <= 0) {
@@ -34,7 +34,7 @@ export const getLightColorForLapTime = (time: number, fastestTime: number, alpha
     }
 };
 
-export const getBgColorForLapTime = (time: number, fastestTime: number, alpha: number = 1) => {
+export const getBgColorForLapTime = (time: number, fastestTime: number, alpha = 1) => {
     const diff = time - fastestTime;
 
     if (diff <= 0) {
@@ -55,7 +55,7 @@ export const getBgColorForLapTime = (time: number, fastestTime: number, alpha: n
 export const getAccidentColorForLapTime = (
     time: number,
     fastestTime: number,
-    alpha: number = 1
+    alpha = 1
 ) => {
     const diff = time - fastestTime;
 
@@ -77,7 +77,7 @@ export const getAccidentColorForLapTime = (
 export const getLightColorForLapTimeBac = (
     time: number,
     fastestTime: number,
-    alpha: number = 1
+    alpha = 1
 ) => {
     const diff = time - fastestTime;
 

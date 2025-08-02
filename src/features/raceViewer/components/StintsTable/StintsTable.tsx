@@ -26,7 +26,7 @@ const StintsTable: React.FC = () => {
 
     // Calculate minimum lap time from backend data
     if (data?.stintsAnalysis) {
-        for (let teamNumber in data.stintsAnalysis) {
+        for (const teamNumber in data.stintsAnalysis) {
             data.stintsAnalysis[teamNumber].forEach((stint) =>
                 stint.laps.forEach((lapData) => {
                     if (lapData.time < minLapTime) {

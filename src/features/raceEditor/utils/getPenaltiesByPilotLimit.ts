@@ -14,7 +14,7 @@ export const getPenaltiesByPilotLimit = (
         4: minForPilotIfFour,
     };
 
-    for (let team in stintsAnalysis) {
+    for (const team in stintsAnalysis) {
         penaltiesByPilotLimit[team] = 0;
 
         const durationByPilots: Record<string, number> = {};
@@ -29,7 +29,7 @@ export const getPenaltiesByPilotLimit = (
 
         const pilotsQuantity = Object.keys(durationByPilots).length;
 
-        for (let pilot in durationByPilots) {
+        for (const pilot in durationByPilots) {
             if (durationByPilots[pilot] < limitation[pilotsQuantity as keyof typeof limitation]) {
                 const underseating =
                     limitation[pilotsQuantity as keyof typeof limitation] - durationByPilots[pilot];

@@ -18,7 +18,7 @@ export const useLapTimesChartData = (raceId: string) => {
     const datasets = [];
     let counter = 0;
 
-    for (let team in raceDataFromApi.stintsAnalysis) {
+    for (const team in raceDataFromApi.stintsAnalysis) {
         const teamData = raceDataFromApi.stintsAnalysis[team].reduce<number[]>((acc, stintData) => {
             return [...acc, ...stintData.laps.map((lapData) => lapData.time)];
         }, []);

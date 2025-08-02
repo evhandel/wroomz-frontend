@@ -40,14 +40,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     const login = async (email: string, password: string) => {
-        try {
-            const userData = await api.auth.login({ email, password });
-            setUser(userData);
-            api.auth.setCurrentUser(userData);
-            return userData;
-        } catch (error) {
-            throw error;
-        }
+        const userData = await api.auth.login({ email, password });
+        setUser(userData);
+        api.auth.setCurrentUser(userData);
+        return userData;
     };
 
     const register = async (
@@ -56,14 +52,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         email: string,
         password: string
     ) => {
-        try {
-            const userData = await api.auth.register({ firstName, lastName, email, password });
-            setUser(userData);
-            api.auth.setCurrentUser(userData);
-            return userData;
-        } catch (error) {
-            throw error;
-        }
+        const userData = await api.auth.register({ firstName, lastName, email, password });
+        setUser(userData);
+        api.auth.setCurrentUser(userData);
+        return userData;
     };
 
     const logout = () => {

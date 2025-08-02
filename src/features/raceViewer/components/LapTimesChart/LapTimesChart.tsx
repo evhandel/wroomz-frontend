@@ -49,7 +49,7 @@ const LapTimesChart = () => {
         if (!raceData?.stintsAnalysis) return 999;
 
         let minTime = 999;
-        for (let teamNumber in raceData.stintsAnalysis) {
+        for (const teamNumber in raceData.stintsAnalysis) {
             raceData.stintsAnalysis[teamNumber].forEach((stint) =>
                 stint.laps.forEach((lapData) => {
                     if (lapData.time < minTime) {

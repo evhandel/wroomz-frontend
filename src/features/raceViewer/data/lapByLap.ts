@@ -19,7 +19,7 @@ export const useLapByLap = (raceId: string) => {
 
     const dynamicLapByLap: lapByLapItem[] = [];
 
-    for (let team in data.stintsAnalysis) {
+    for (const team in data.stintsAnalysis) {
         data.stintsAnalysis[team].forEach((stintData) => {
             stintData.laps.forEach((lapData) => {
                 if (!dynamicLapByLap[lapData.no - 1]) {
