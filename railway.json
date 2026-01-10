@@ -1,5 +1,9 @@
 {
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile"
+  },
   "deploy": {
-    "startCommand": "yarn serve"
+    "startCommand": "nginx -g 'daemon off;'"
   }
 }
