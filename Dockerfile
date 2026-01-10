@@ -3,6 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Accept build-time environment variables from Railway
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 # Copy package files
 COPY package.json yarn.lock ./
 
@@ -12,7 +16,7 @@ RUN yarn install --frozen-lockfile
 # Copy source code
 COPY . .
 
-# Build the app
+# Build the app (REACT_APP_* vars are baked in here)
 RUN yarn build
 
 # Stage 2: Serve with nginx (much lighter than Node.js)
