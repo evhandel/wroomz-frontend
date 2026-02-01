@@ -40,13 +40,13 @@ const ComboTableCell: React.FC<ComboTableCellProps> = (props) => {
                 {activeKart !== props.kart && <span>{props.kart}</span>}
             </div>
             <div>
-                <Label active={fastestBest}>Best:</Label>
-                <StyledSpan fastest={fastestBest}>{props.bestLap.toFixed(3)}</StyledSpan>
+                <Label $active={fastestBest}>Best:</Label>
+                <StyledSpan $fastest={fastestBest}>{props.bestLap.toFixed(3)}</StyledSpan>
             </div>
             <div>
-                <Label active={fastestAvg}>Avg:</Label>
+                <Label $active={fastestAvg}>Avg:</Label>
                 <StyledSpan
-                    fastest={fastestAvg}
+                    $fastest={fastestAvg}
                     style={{
                         color: !fastestAvg && getAccidentColorForLapTime(props.bestLap, props.minLapTime, 1),
                     }}
@@ -56,12 +56,12 @@ const ComboTableCell: React.FC<ComboTableCellProps> = (props) => {
             </div>
             {props.laps[0].no > 1 && (
                 <div>
-                    <Label active={fastestPit}>Pit:</Label>
-                    <StyledSpan fastest={fastestPit}>{formatTime(props.laps[0].time)}</StyledSpan>
+                    <Label $active={fastestPit}>Pit:</Label>
+                    <StyledSpan $fastest={fastestPit}>{formatTime(props.laps[0].time)}</StyledSpan>
                 </div>
             )}
             <div>
-                <Label active={props.duration > props.stintMaxLimit * 60}>Dur:</Label>
+                <Label $active={props.duration > props.stintMaxLimit * 60}>Dur:</Label>
                 {props.duration > props.stintMaxLimit * 60 ? (
                     <Red>
                         <b>{formatTime(props.duration)}</b>

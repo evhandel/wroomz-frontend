@@ -7,6 +7,10 @@ import { StyledTableCell } from './LapsTable.styles';
 import { useLapTimesArray } from './LapsTable.data';
 import { useParams } from 'react-router-dom';
 import { useRaceData } from '../../data/useRaceData';
+import { LapCell } from './components/LapCell/LapCell';
+
+const getRowBackground = (index: number) =>
+    index % 2 === 0 ? 'rgb(28, 25, 23)' : '#060606';
 
 const LapsTable: React.FC = () => {
     const { id = '' } = useParams<{ id: string }>();
@@ -17,7 +21,7 @@ const LapsTable: React.FC = () => {
         return <div>Loading lap times data...</div>;
     }
 
-    const results = data.results;
+    const { results } = data;
 
     return (
         <div>
@@ -34,19 +38,21 @@ const LapsTable: React.FC = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {lapTimesArray.map((lapByTeamsArray, index) => (
+                    {lapTimesArray.map((currentRowLaps, lapIndex) => (
                         <TableRow
-                            key={index}
-                            sx={{
-                                backgroundColor: index % 2 === 0 ? 'rgb(28, 25, 23)' : '#060606',
-                            }}
+                            key={lapIndex}
+                            sx={{ backgroundColor: getRowBackground(lapIndex) }}
                         >
-                            <StyledTableCell align='center'>{index + 1}</StyledTableCell>
-
-                            {lapByTeamsArray.map((lapTime, i) => (
-                                <StyledTableCell key={i} align='center'>
-                                    {lapTime}
-                                </StyledTableCell>
+                            <StyledTableCell align='center'>{lapIndex + 1}</StyledTableCell>
+                            {currentRowLaps.map((lap, teamIndex) => (
+                                <LapCell
+                                    key={teamIndex}
+                                    lap={lap}
+                                    lapIndex={lapIndex}
+                                    teamIndex={teamIndex}
+                                    lapTimesArray={lapTimesArray}
+                                    currentRowLaps={currentRowLaps}
+                                />
                             ))}
                         </TableRow>
                     ))}

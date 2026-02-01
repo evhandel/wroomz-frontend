@@ -53,10 +53,11 @@ export function ViewRace() {
                     justifyContent: 'space-between',
                     alignItems: 'flex-start',
                     mb: 3,
+                    px: 8,
                 }}
             >
                 <Box>
-                    <Typography variant='h4' component='h1' sx={{ ml: 8 }}>
+                    <Typography variant='h4' component='h1'>
                         {race.name}
                     </Typography>
                     {isAuthenticated && (

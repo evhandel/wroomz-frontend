@@ -83,9 +83,9 @@ const StintsTable: React.FC = () => {
                                 <StyledTableCell align='center'>
                                     <b>{index + 1}</b>
                                 </StyledTableCell>
-                                {stintByTeams.map((stintByTeam) =>
+                                {stintByTeams.map((stintByTeam, teamIndex) =>
                                     stintByTeam?.laps?.length ? (
-                                        <StyledTableCell key={stintByTeam.teamNumber}>
+                                        <StyledTableCell key={teamIndex}>
                                             <ComboTableCell
                                                 {...stintByTeam}
                                                 minLapTime={minLapTime}
@@ -101,7 +101,7 @@ const StintsTable: React.FC = () => {
                                             />
                                         </StyledTableCell>
                                     ) : (
-                                        <StyledTableCell />
+                                        <StyledTableCell key={teamIndex} />
                                     )
                                 )}
                             </TableRow>

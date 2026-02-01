@@ -11,9 +11,9 @@ export const Root = styled.div`
         filter: brightness(150%);
     }
 `;
-export const Label = styled.span<{ active?: boolean }>`
+export const Label = styled.span<{ $active?: boolean }>`
     ${(props) =>
-        !props.active &&
+        !props.$active &&
         css`
             color: rgb(161, 161, 170);
         `}
@@ -23,9 +23,9 @@ export const Label = styled.span<{ active?: boolean }>`
     display: inline-block;
 `;
 
-export const StyledSpan = styled.span<{ fastest: boolean }>`
+export const StyledSpan = styled.span<{ $fastest: boolean }>`
     ${(props) =>
-        props.fastest
+        props.$fastest
             ? css`
                   color: #a200fa;
                   font-weight: bold;
