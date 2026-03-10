@@ -10163,9 +10163,6 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-"wroomz-types@file:../wroomz-types":
-  version "1.0.1"
-
 ws@^7.4.6:
   version "7.5.10"
   resolved "https://registry.npmjs.org/ws/-/ws-7.5.10.tgz"
