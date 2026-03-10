@@ -36,6 +36,11 @@ apiClient.interceptors.response.use(
         const config = error.config as RetryableConfig | undefined;
 
         if (status === 401 && config && !config._isRetry) {
+            const url = config.url || '';
+            // Don't trigger reauth for login/register — let the caller handle 401
+            if (url.startsWith('/auth/')) {
+                return Promise.reject(error);
+            }
             const requestReauth = getReauthFn();
             if (requestReauth) {
                 try {
