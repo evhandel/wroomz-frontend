@@ -35,7 +35,7 @@ const TeamOverrides: React.FC<{ teamNumber: string }> = ({ teamNumber }) => {
             }))
         );
 
-    const laps = raceData[teamNumber]?.laps ?? [];
+    const laps = useMemo(() => raceData[teamNumber]?.laps ?? [], [raceData, teamNumber]);
     const pitStopDetectionTime = +(settingsData.pitStopDetectionTime ?? '0');
 
     // Auto-detected split points (lap numbers where lapTime >= threshold)
@@ -63,6 +63,15 @@ const TeamOverrides: React.FC<{ teamNumber: string }> = ({ teamNumber }) => {
         const autoSet = new Set(autoSplitLaps);
         return teamOverride.filter((lap) => lap !== 1 && !autoSet.has(lap));
     }, [teamOverride, autoSplitLaps]);
+
+    // Ordered list of all active (non-ignored) split laps for pitstop numbering
+    const activeSplits = useMemo(() => {
+        const activeAuto = autoSplitLaps.filter((l) => !ignoredAutoSplits.has(l));
+        const all = [...activeAuto, ...manualSplits];
+        return all.sort((a, b) => a - b);
+    }, [autoSplitLaps, ignoredAutoSplits, manualSplits]);
+
+    const getPitstopNumber = (lapNumber: number) => activeSplits.indexOf(lapNumber) + 1;
 
     const hasOverride = teamOverride !== undefined;
 
@@ -167,7 +176,8 @@ const TeamOverrides: React.FC<{ teamNumber: string }> = ({ teamNumber }) => {
                         ) : (
                             <>
                                 <span>
-                                    Lap {lapNumber} — {formatTime(lap.lapTime)}
+                                    Pitstop {getPitstopNumber(lapNumber)} · Lap {lapNumber} —{' '}
+                                    {formatTime(lap.lapTime)}
                                 </span>
                                 <IconButton
                                     size="small"
@@ -192,7 +202,8 @@ const TeamOverrides: React.FC<{ teamNumber: string }> = ({ teamNumber }) => {
                             <SplitItem key={lapNumber}>
                                 <Chip label="manual" size="small" color="warning" variant="outlined" />
                                 <span>
-                                    Lap {lapNumber} — {formatTime(lap.lapTime)}
+                                    Pitstop {getPitstopNumber(lapNumber)} · Lap {lapNumber} —{' '}
+                                    {formatTime(lap.lapTime)}
                                 </span>
                                 <IconButton
                                     size="small"
@@ -249,6 +260,14 @@ const StintOverrides: React.FC = () => {
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>
                             Team {result.teamNumber}
+                            {result.teamLabel
+                                ? ` — ${result.teamLabel}`
+                                : ''}
+                            {result.pilots.length > 0
+                                ? result.teamLabel
+                                    ? ` (${result.pilots.join(', ')})`
+                                    : ` — ${result.pilots.join(', ')}`
+                                : ''}
                             {' — '}
                             {stintsAnalysis[result.teamNumber]?.length ?? 0} stints
                         </Typography>
