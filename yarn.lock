@@ -1346,8 +1346,10 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.57.1.tgz"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@evhandel/wroomz-types@file:../wroomz-types":
+"@evhandel/wroomz-types@^1.1.0":
   version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@evhandel/wroomz-types/-/wroomz-types-1.1.0.tgz#1d6e706f0ecc3d4ddaa389f9187bf500b33fd54e"
+  integrity sha512-mclv4bND+FSbr/6u+mOFI0T+f86fAxPVl+G/FGghC2tugHDzQchnrjViPKPju2ADgCPwDrAD4EIsFFr49rOrdg==
 
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
