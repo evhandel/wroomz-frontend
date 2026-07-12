@@ -37,6 +37,7 @@ const ManualPenalties = () => {
         addManualPenalty,
         updatePenaltySeconds,
         setPenaltyServedInRace,
+        setPenaltyInternal,
         deletePenalty,
         toggleDisqualification,
     } = useRaceEditorStore(
@@ -46,6 +47,7 @@ const ManualPenalties = () => {
             addManualPenalty: s.addManualPenalty,
             updatePenaltySeconds: s.updatePenaltySeconds,
             setPenaltyServedInRace: s.setPenaltyServedInRace,
+            setPenaltyInternal: s.setPenaltyInternal,
             deletePenalty: s.deletePenalty,
             toggleDisqualification: s.toggleDisqualification,
         }))
@@ -163,6 +165,7 @@ const ManualPenalties = () => {
                             penalty={p}
                             onUpdateSeconds={updatePenaltySeconds}
                             onSetServedInRace={setPenaltyServedInRace}
+                            onSetInternal={setPenaltyInternal}
                             onDelete={deletePenalty}
                         />
                     ))}

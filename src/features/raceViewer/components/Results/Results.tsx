@@ -11,9 +11,13 @@ import TableCell from '@mui/material/TableCell';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useRaceData } from '../../data/useRaceData';
+import { usePenaltiesByTeam } from '../PenaltiesTable/PenaltiesByTeam.data';
 
 const Results: FC<ResultsProps> = ({ raceId = '' }) => {
     const { data: raceData, isLoading } = useRaceData(raceId);
+    // Penalty value shown to the public excludes internal penalties, even though
+    // those still affect the result ordering (result.penalty / totalTime).
+    const penaltiesByTeam = usePenaltiesByTeam(raceId);
 
     const { leaderStintQuantity, maxLaps, fastestTeamOnTrackTime } = useMemo(() => {
         if (!raceData || !raceData.results || raceData.results.length === 0) {
@@ -72,12 +76,14 @@ const Results: FC<ResultsProps> = ({ raceId = '' }) => {
                                     `+${maxLaps - result.laps} laps`
                                 );
 
-                            const penaltyPrefix = result.penalty > 0 ? '+' : '';
+                            const displayedPenalty =
+                                penaltiesByTeam.get(result.teamNumber)?.total ?? 0;
+                            const penaltyPrefix = displayedPenalty > 0 ? '+' : '';
                             const penaltyPostfix =
-                                result.penalty >= 0 ? 'penalty' : 'compensation';
+                                displayedPenalty >= 0 ? 'penalty' : 'compensation';
                             const penaltyElement = (
-                                <PenaltyText value={result.penalty}>
-                                    {`${penaltyPrefix}${Math.round(result.penalty)}s ${penaltyPostfix}`}
+                                <PenaltyText value={displayedPenalty}>
+                                    {`${penaltyPrefix}${Math.round(displayedPenalty)}s ${penaltyPostfix}`}
                                 </PenaltyText>
                             );
 

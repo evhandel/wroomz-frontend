@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import type { Penalty, PenaltySource } from '@evhandel/wroomz-types';
 
 interface SourceChipDescriptor {
@@ -25,10 +27,17 @@ interface PenaltyRowProps {
     penalty: Penalty;
     onUpdateSeconds: (id: string, seconds: number) => void;
     onSetServedInRace: (id: string, value: boolean) => void;
+    onSetInternal: (id: string, value: boolean) => void;
     onDelete: (id: string) => void;
 }
 
-const PenaltyRow = ({ penalty, onUpdateSeconds, onSetServedInRace, onDelete }: PenaltyRowProps) => {
+const PenaltyRow = ({
+    penalty,
+    onUpdateSeconds,
+    onSetServedInRace,
+    onSetInternal,
+    onDelete,
+}: PenaltyRowProps) => {
     const [draft, setDraft] = useState<string>(String(penalty.seconds));
 
     useEffect(() => {
@@ -50,6 +59,7 @@ const PenaltyRow = ({ penalty, onUpdateSeconds, onSetServedInRace, onDelete }: P
     }, [penalty.seconds]);
 
     const sourceChip = SOURCE_CHIP[penalty.source];
+    const internal = penalty.internal === true;
 
     return (
         <Box
@@ -60,6 +70,7 @@ const PenaltyRow = ({ penalty, onUpdateSeconds, onSetServedInRace, onDelete }: P
                 py: 1,
                 borderBottom: '1px solid rgba(255,255,255,0.06)',
                 flexWrap: 'wrap',
+                opacity: internal ? 0.5 : 1,
             }}
         >
             <Chip
@@ -117,6 +128,26 @@ const PenaltyRow = ({ penalty, onUpdateSeconds, onSetServedInRace, onDelete }: P
                     color="warning"
                 />
             )}
+            {internal && (
+                <Chip
+                    label="internal"
+                    size="small"
+                    variant="outlined"
+                    color="default"
+                />
+            )}
+            <IconButton
+                size="small"
+                color={internal ? 'primary' : 'default'}
+                onClick={() => onSetInternal(penalty.id, !internal)}
+                title={internal ? 'Mark as public' : 'Mark as internal'}
+            >
+                {internal ? (
+                    <VisibilityOffIcon fontSize="small" />
+                ) : (
+                    <VisibilityIcon fontSize="small" />
+                )}
+            </IconButton>
             <IconButton
                 size="small"
                 color="error"

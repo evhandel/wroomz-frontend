@@ -54,6 +54,7 @@ export interface RaceEditorActions {
     ) => void;
     updatePenaltySeconds: (id: string, seconds: number) => void;
     setPenaltyServedInRace: (id: string, value: boolean) => void;
+    setPenaltyInternal: (id: string, value: boolean) => void;
     deletePenalty: (id: string) => void;
     setTeams: (value: Team[] | ((prev: Team[]) => Team[])) => void;
     setStintsByPilots: (
@@ -167,6 +168,24 @@ export const createRaceEditorStore = ({ initialRaceData, onCalculate }: CreateSt
                             return { ...rest, seconds: 0, servedInRace: true };
                         }
                         return { ...p, servedInRace: false };
+                    }),
+                };
+            }),
+
+        setPenaltyInternal: (id, value) =>
+            set((state) => {
+                const target = state.penalties.find((p) => p.id === id);
+                if (!target) {
+                    return {};
+                }
+                return {
+                    penalties: state.penalties.map((p) => {
+                        if (p.id !== id) return p;
+                        if (value === true) {
+                            return { ...p, internal: true };
+                        }
+                        const { internal: _ignored, ...rest } = p;
+                        return rest;
                     }),
                 };
             }),

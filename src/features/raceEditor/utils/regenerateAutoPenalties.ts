@@ -49,6 +49,7 @@ const buildPenaltyFromViolation = (
     const description = formatAutoPenaltyDescription(violation);
 
     const servedInRace = prior?.servedInRace === true;
+    const internal = prior?.internal === true;
 
     const seconds = servedInRace
         ? 0
@@ -83,6 +84,10 @@ const buildPenaltyFromViolation = (
 
     if (!servedInRace && prior?.userEditedSeconds === true) {
         base.userEditedSeconds = true;
+    }
+
+    if (internal) {
+        base.internal = true;
     }
 
     return base;

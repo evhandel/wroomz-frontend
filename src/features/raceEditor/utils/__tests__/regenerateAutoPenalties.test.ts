@@ -87,6 +87,30 @@ describe('regenerateAutoPenalties', () => {
         expect(result[0].id).toBe('auto-1');
     });
 
+    it('preserves the internal flag across regeneration while still charging seconds', () => {
+        const previousAuto: Penalty = {
+            id: 'auto-1',
+            teamNumber: '1',
+            seconds: 21,
+            description: 'stale text',
+            source: 'stintLimit',
+            internal: true,
+            metadata: { pilot: 'Alice', stintNumber: 1 },
+        };
+        const result = regenerateAutoPenalties({
+            ...baseInput,
+            previousItems: [previousAuto],
+            stintsAnalysis: {
+                '1': [makeStint(1820.1, { pilot: 'Alice', no: 1 })],
+            },
+        });
+        expect(result).toHaveLength(1);
+        expect(result[0].internal).toBe(true);
+        // internal penalties still carry their formula seconds — they only vanish from the viewer
+        expect(result[0].seconds).toBe(21);
+        expect(result[0].id).toBe('auto-1');
+    });
+
     it('produces seconds=0 when autoChargeEnabled=false (and no prior edit)', () => {
         const result = regenerateAutoPenalties({
             ...baseInput,

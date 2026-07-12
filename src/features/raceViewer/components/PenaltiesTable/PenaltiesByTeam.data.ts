@@ -16,7 +16,9 @@ export const usePenaltiesByTeam = (raceId: string): Map<string, TeamPenaltiesInf
         const map = new Map<string, TeamPenaltiesInfo>();
         if (!data) return map;
 
-        const items = (data.penalties.items ?? []).filter(isMeaningfulPenalty);
+        const items = (data.penalties.items ?? [])
+            .filter((p) => p.internal !== true)
+            .filter(isMeaningfulPenalty);
         const dsqSet = new Set(data.penalties.disqualifiedTeams ?? []);
 
         const itemsByTeam = new Map<string, Penalty[]>();
