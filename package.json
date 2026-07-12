@@ -74,7 +74,7 @@
     ]
   },
   "devDependencies": {
-    "@evhandel/wroomz-types": "file:../wroomz-types",
+    "@evhandel/wroomz-types": "^1.1.0",
     "@types/uuid": "^9",
     "prettier": "^3.5.3"
   }
