@@ -5,7 +5,7 @@ import Results from '../Results/Results';
 import DeltaTimesChart from '../DeltaTimesChart/DeltaTimesChart';
 import StintsTable from '../StintsTable/StintsTable';
 import LapsTable from '../LapsTable/LapsTable';
-import PenaltiesTable from '../PenaltiesTable/PenaltiesTable';
+import PenaltiesByTeam from '../PenaltiesTable/PenaltiesByTeam';
 import { useParams } from 'react-router-dom';
 
 const Main: React.FC = () => {
@@ -17,7 +17,7 @@ const Main: React.FC = () => {
         <Stack spacing={4}>
             <Results raceId={id} />
             <StintsTable />
-            <PenaltiesTable />
+            <PenaltiesByTeam />
             <DeltaTimesChart />
             <LapTimesChart />
             <LapsTable />

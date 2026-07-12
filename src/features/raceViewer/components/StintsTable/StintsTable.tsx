@@ -12,6 +12,7 @@ import ComboTableCell from './components/ComboTableCell/ComboTableCell';
 import { useParams } from 'react-router-dom';
 import { useRaceData } from '../../data/useRaceData';
 import { getMinLapTime } from '../../helpers/getMinLapTime';
+import { getMergedStintMarkers } from '../../helpers/getMergedStintMarkers';
 
 const StintsTable: React.FC = () => {
     const { id = '' } = useParams<{ id: string }>();
@@ -22,7 +23,18 @@ const StintsTable: React.FC = () => {
 
     const minLapTime = useMemo(() => getMinLapTime(data?.stintsAnalysis), [data]);
 
+    const mergedMarkers = useMemo(
+        () =>
+            getMergedStintMarkers(
+                data?.stintsAnalysis ?? {},
+                data?.settings?.maxStint ?? 0,
+                data?.settings?.mergeConsecutiveStintsForMax ?? false
+            ),
+        [data]
+    );
+
     const minPitStopLapTimeSetting = data?.settings?.minPitStopLapTime ?? 0;
+    const kartHasFixedNumber = data?.settings?.kartHasFixedNumber ?? true;
 
     const { fastestAvg, fastestPit } = useMemo(() => {
         let fastestAvg = 9999;
@@ -30,10 +42,17 @@ const StintsTable: React.FC = () => {
         stints.forEach((stintByTeams) => {
             stintByTeams.forEach((stint) => {
                 if (!stint.laps) return;
-                if (stint.avgLapExcludingPitExitLap < fastestAvg) {
+                if (
+                    Number.isFinite(stint.avgLapExcludingPitExitLap) &&
+                    stint.avgLapExcludingPitExitLap < fastestAvg
+                ) {
                     fastestAvg = stint.avgLapExcludingPitExitLap;
                 }
-                if (stint.laps[0].time < fastestPit && stint.no > 1 && stint.laps[0].time >= minPitStopLapTimeSetting) {
+                if (
+                    stint.laps[0].time < fastestPit &&
+                    stint.no > 1 &&
+                    stint.laps[0].time >= minPitStopLapTimeSetting
+                ) {
                     fastestPit = stint.laps[0].time;
                 }
             });
@@ -44,7 +63,7 @@ const StintsTable: React.FC = () => {
     const maxStint = data?.settings?.maxStint;
     const results = data?.results;
 
-    if (!data || !results || !maxStint) {
+    if (!data || !results || maxStint === undefined) {
         return <div>Loading race data...</div>;
     }
 
@@ -57,12 +76,9 @@ const StintsTable: React.FC = () => {
                         <TableRow>
                             <StyledTableCell align='center'>Stint\Team</StyledTableCell>
                             {results.map((result) => {
-                                const fullText =
-                                    result.teamLabel || result.pilots.join(', ');
+                                const fullText = result.teamLabel || result.pilots.join(', ');
                                 const shortText =
-                                    fullText.length > 5
-                                        ? fullText.slice(0, 5) + '…'
-                                        : fullText;
+                                    fullText.length > 5 ? fullText.slice(0, 5) + '…' : fullText;
                                 return (
                                     <StyledTableCell key={result.teamNumber} align='center'>
                                         <Tooltip title={fullText} arrow>
@@ -113,6 +129,10 @@ const StintsTable: React.FC = () => {
                                                 stintMaxLimit={maxStint}
                                                 activeKart={activeKart}
                                                 setActiveKart={setActiveKart}
+                                                kartHasFixedNumber={kartHasFixedNumber}
+                                                mergedMarker={mergedMarkers.get(
+                                                    `${stintByTeam.teamNumber}:${stintByTeam.no}`
+                                                )}
                                             />
                                         </StyledTableCell>
                                     ) : (

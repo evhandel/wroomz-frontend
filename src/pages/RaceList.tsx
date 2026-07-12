@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import {
+    Avatar,
     Box,
     Card,
     CardContent,
@@ -23,6 +24,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getTeamLogo } from '../features/teams/logoMap';
 
 const PAGE_PX = '60px';
 
@@ -31,7 +33,7 @@ export function RaceList() {
     const queryClient = useQueryClient();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [raceToDelete, setRaceToDelete] = useState<number | null>(null);
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user, isSuperadmin } = useAuth();
 
     const {
         data: races,
@@ -122,42 +124,55 @@ export function RaceList() {
                                     alignItems: 'flex-start',
                                 }}
                             >
-                                <Box>
-                                    <Typography
-                                        variant='h6'
-                                        component='div'
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Avatar
+                                        src={getTeamLogo(race.organizer)}
+                                        alt={race.teamName ?? race.organizer}
+                                        variant='rounded'
+                                        imgProps={{ sx: { objectFit: 'contain' } }}
                                         sx={{
-                                            fontWeight: 400,
-                                            fontStyle: 'italic',
-                                            mb: 0,
+                                            width: 120,
+                                            height: 40,
+                                            bgcolor: 'transparent',
                                         }}
-                                    >
-                                        {race.name}
-                                    </Typography>
-                                    {isAuthenticated && (
-                                        <Chip
-                                            label={race.isPublished ? 'Published' : 'Not Published'}
-                                            color={race.isPublished ? 'success' : 'default'}
-                                            size='small'
-                                            sx={{ mr: 1 }}
-                                        />
-                                    )}
-                                    {isAuthenticated && race.createdAt && (
+                                    />
+                                    <Box>
                                         <Typography
-                                            variant='body2'
-                                            color='text.secondary'
+                                            variant='h6'
+                                            component='div'
                                             sx={{
-                                                mt: 1,
+                                                fontWeight: 400,
                                                 fontStyle: 'italic',
+                                                mb: 0,
                                             }}
                                         >
-                                            Created:{' '}
-                                            {format(parseISO(race.createdAt), 'dd.MM.yyyy')}
+                                            {race.name}
                                         </Typography>
-                                    )}
+                                        {isAuthenticated && (
+                                            <Chip
+                                                label={race.isPublished ? 'Published' : 'Not Published'}
+                                                color={race.isPublished ? 'success' : 'default'}
+                                                size='small'
+                                                sx={{ mr: 1, mt: 0.5 }}
+                                            />
+                                        )}
+                                        {isAuthenticated && race.createdAt && (
+                                            <Typography
+                                                variant='body2'
+                                                color='text.secondary'
+                                                sx={{
+                                                    mt: 1,
+                                                    fontStyle: 'italic',
+                                                }}
+                                            >
+                                                Created:{' '}
+                                                {format(parseISO(race.createdAt), 'dd.MM.yyyy')}
+                                            </Typography>
+                                        )}
+                                    </Box>
                                 </Box>
                                 <Box sx={{ display: 'flex', gap: 1 }}>
-                                    {isAuthenticated && (
+                                    {user && (isSuperadmin || user.id === race.ownerId) && (
                                         <>
                                             <Tooltip title='Edit'>
                                                 <IconButton

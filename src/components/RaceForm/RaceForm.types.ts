@@ -1,3 +1,4 @@
+import type { Organizer } from '@evhandel/wroomz-types';
 import { CreateRaceDto, Race } from '../../api';
 
 export interface RaceFormProps {
@@ -11,9 +12,12 @@ export interface RaceFormProps {
     onSubmit: (data: CreateRaceDto) => void;
     isPending: boolean;
     isError: boolean;
+    currentUserOrganizer: Organizer | null;
+    isSuperadmin: boolean;
 }
 
 export interface RaceFormValues {
     name: string;
+    organizer: Organizer;
     isPublished: boolean;
 }

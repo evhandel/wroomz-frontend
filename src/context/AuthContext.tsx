@@ -5,15 +5,9 @@ import { isTokenExpired } from '../utils/jwt';
 interface AuthContextProps {
     user: AuthUser | null;
     login: (email: string, password: string) => Promise<AuthUser>;
-    register: (
-        firstName: string,
-        lastName: string,
-        email: string,
-        password: string,
-        inviteCode: string
-    ) => Promise<AuthUser>;
     logout: () => void;
     isAuthenticated: boolean;
+    isSuperadmin: boolean;
     isLoading: boolean;
 }
 
@@ -38,7 +32,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (isTokenExpired(token)) {
-            // Token missing or expired — clear stale data
             api.auth.logout();
             setUser(null);
         } else {
@@ -54,30 +47,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return userData;
     };
 
-    const register = async (
-        firstName: string,
-        lastName: string,
-        email: string,
-        password: string,
-        inviteCode: string
-    ) => {
-        const userData = await api.auth.register({ firstName, lastName, email, password, inviteCode });
-        setUser(userData);
-        api.auth.setCurrentUser(userData);
-        return userData;
-    };
-
     const logout = () => {
         api.auth.logout();
         setUser(null);
     };
 
-    const value = {
+    const value: AuthContextProps = {
         user,
         login,
-        register,
         logout,
         isAuthenticated: !!user,
+        isSuperadmin: user?.role === 'SUPERADMIN',
         isLoading,
     };
 

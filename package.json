@@ -34,6 +34,7 @@
     "react-router-dom": "^6.30.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^5.1.0",
     "zustand": "^5.0.11"
   },
@@ -73,7 +74,8 @@
     ]
   },
   "devDependencies": {
-    "@evhandel/wroomz-types": "^1.0.1",
+    "@evhandel/wroomz-types": "file:../wroomz-types",
+    "@types/uuid": "^9",
     "prettier": "^3.5.3"
   }
 }

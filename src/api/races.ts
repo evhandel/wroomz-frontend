@@ -6,6 +6,9 @@ export type Race = RaceResponse;
 export type CreateRaceDto = CreateRaceRequest;
 
 export const racesApi = {
+    // NOTE: backend returns RaceListResponse[] (a Pick of RaceResponse: id/name/isPublished/
+    // ownerId/teamName/logoKey/createdAt/updatedAt). Typing as Race[] is an intentional superset —
+    // list-only fields are always present; other fields are null on the wire.
     getAll: () => apiClient.get<Race[]>('/public/races').then((response) => response.data),
 
     getById: (id: string) =>

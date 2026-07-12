@@ -25,18 +25,14 @@ interface LapOption {
 }
 
 const TeamOverrides: React.FC<{ teamNumber: string }> = ({ teamNumber }) => {
-    const { raceData, settingsData, stintOverrides, setStintOverrideForTeam } =
-        useRaceEditorStore(
-            useShallow((s) => ({
-                raceData: s.raceData,
-                settingsData: s.settingsData,
-                stintOverrides: s.stintOverrides,
-                setStintOverrideForTeam: s.setStintOverrideForTeam,
-            }))
-        );
+    const raceData = useRaceEditorStore((s) => s.raceData);
+    const pitStopDetectionTime = useRaceEditorStore(
+        (s) => +(s.settingsData.pitStopDetectionTime ?? '0')
+    );
+    const stintOverrides = useRaceEditorStore((s) => s.stintOverrides);
+    const setStintOverrideForTeam = useRaceEditorStore((s) => s.setStintOverrideForTeam);
 
     const laps = useMemo(() => raceData[teamNumber]?.laps ?? [], [raceData, teamNumber]);
-    const pitStopDetectionTime = +(settingsData.pitStopDetectionTime ?? '0');
 
     // Auto-detected split points (lap numbers where lapTime >= threshold)
     const autoSplitLaps = useMemo(() => {

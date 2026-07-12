@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="116" height="44" viewBox="0 0 116 44" fill="none">
+  <defs>
+    <linearGradient id="rtArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3179F5" stop-opacity="0.55"></stop>
+      <stop offset="1" stop-color="#3179F5" stop-opacity="0.05"></stop>
+    </linearGradient>
+    <mask id="rtWheels" maskUnits="userSpaceOnUse" x="0" y="0" width="116" height="44">
+      <rect width="116" height="44" fill="#FFFFFF"></rect>
+      <circle cx="24" cy="34" r="9" fill="#000000"></circle>
+      <circle cx="92" cy="35.5" r="7.5" fill="#000000"></circle>
+    </mask>
+  </defs>
+  <path d="M2,35 L7,9 L17,9 L16,18 L27,16 L34,6 L41,13 L51,15 L79,22 L99,24 L106,27 L111,31 L111,40 L2,40 Z" fill="url(#rtArea)" mask="url(#rtWheels)"></path>
+  <circle cx="24" cy="34" r="7" stroke="#3179F5" stroke-width="3"></circle>
+  <circle cx="92" cy="35.5" r="5.5" stroke="#3179F5" stroke-width="3"></circle>
+  <polyline points="2,35 7,9 17,9 16,18 27,16 34,6 41,13 51,15 79,22 99,24 106,27 111,31" stroke="#3179F5" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></polyline>
+</svg>

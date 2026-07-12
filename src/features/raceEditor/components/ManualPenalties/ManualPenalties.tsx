@@ -1,46 +1,90 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import TextField from '@mui/material/TextField';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import type { Penalty, PenaltySource } from '@evhandel/wroomz-types';
 import { SectionWrapper, Label, SectionHeader } from '../common/styles';
-import PenaltyList from '../../../../components/PenaltyList';
 import { useShallow } from 'zustand/react/shallow';
 import { useRaceEditorStore } from '../../store/RaceEditorStoreProvider';
+import PenaltyRow from './PenaltyRow';
+
+const SOURCE_ORDER: Record<PenaltySource, number> = {
+    manual: 0,
+    stintLimit: 1,
+    pilotLimit: 2,
+    minRest: 3,
+};
+
+const sortPenalties = (items: Penalty[]): Penalty[] =>
+    [...items].sort((a, b) => {
+        const teamDiff = Number(a.teamNumber) - Number(b.teamNumber);
+        if (teamDiff !== 0) return teamDiff;
+        const sourceDiff = SOURCE_ORDER[a.source] - SOURCE_ORDER[b.source];
+        if (sourceDiff !== 0) return sourceDiff;
+        return a.description.localeCompare(b.description);
+    });
 
 const ManualPenalties = () => {
-    const { penaltiesManual, setPenaltiesManual, disqualifiedTeams, toggleDisqualification } =
-        useRaceEditorStore(
-            useShallow((s) => ({
-                penaltiesManual: s.penaltiesManual,
-                setPenaltiesManual: s.setPenaltiesManual,
-                disqualifiedTeams: s.disqualifiedTeams,
-                toggleDisqualification: s.toggleDisqualification,
-            }))
-        );
+    const {
+        penalties,
+        disqualifiedTeams,
+        addManualPenalty,
+        updatePenaltySeconds,
+        setPenaltyServedInRace,
+        deletePenalty,
+        toggleDisqualification,
+    } = useRaceEditorStore(
+        useShallow((s) => ({
+            penalties: s.penalties,
+            disqualifiedTeams: s.disqualifiedTeams,
+            addManualPenalty: s.addManualPenalty,
+            updatePenaltySeconds: s.updatePenaltySeconds,
+            setPenaltyServedInRace: s.setPenaltyServedInRace,
+            deletePenalty: s.deletePenalty,
+            toggleDisqualification: s.toggleDisqualification,
+        }))
+    );
 
     const [teamNumber, setTeamNumber] = useState('');
-    const [value, setValue] = useState('');
+    const [seconds, setSeconds] = useState('');
+    const [description, setDescription] = useState('');
+    const [servedInRace, setServedInRace] = useState(false);
 
-    const addPenalty = useCallback(() => {
-        const newPenalties = {
-            ...penaltiesManual,
-            [teamNumber]: (penaltiesManual[teamNumber] || 0) + Number(value),
-        };
-        setPenaltiesManual(newPenalties);
+    const sortedPenalties = useMemo(() => sortPenalties(penalties), [penalties]);
 
-        setTeamNumber('');
-        setValue('');
-    }, [penaltiesManual, teamNumber, value, setPenaltiesManual]);
+    const secondsParsed = Number(seconds);
+    const canAdd =
+        teamNumber.trim() !== '' &&
+        description.trim() !== '' &&
+        (servedInRace ||
+            (seconds.trim() !== '' &&
+                Number.isFinite(secondsParsed) &&
+                secondsParsed !== 0));
+
+    const handleAdd = useCallback(() => {
+        if (!canAdd) return;
+        addManualPenalty({
+            teamNumber: teamNumber.trim(),
+            seconds: servedInRace ? 0 : secondsParsed,
+            description: description.trim(),
+            servedInRace,
+        });
+        setSeconds('');
+        setDescription('');
+        setServedInRace(false);
+    }, [canAdd, addManualPenalty, teamNumber, secondsParsed, description, servedInRace]);
 
     return (
         <SectionWrapper>
-            <SectionHeader>Manual penalties</SectionHeader>
-            <PenaltyList penalties={penaltiesManual} />
+            <SectionHeader>Penalties & compensations</SectionHeader>
 
-            <Stack spacing={2} sx={{ mt: 2 }}>
+            <Stack spacing={2}>
                 <div>
                     <Label>Team number</Label>
                     <TextField
@@ -53,13 +97,42 @@ const ManualPenalties = () => {
                 </div>
 
                 <div>
-                    <Label>Penalty/compensation, sec</Label>
+                    <Label>Seconds</Label>
+                    {!servedInRace && (
+                        <TextField
+                            type="number"
+                            size="small"
+                            sx={{ width: 120 }}
+                            value={seconds}
+                            onChange={(e) => setSeconds(e.target.value)}
+                        />
+                    )}
+                    <FormControlLabel
+                        sx={{ display: 'flex', mt: 1 }}
+                        control={
+                            <Switch
+                                size="small"
+                                checked={servedInRace}
+                                onChange={(e) => {
+                                    const next = e.target.checked;
+                                    setServedInRace(next);
+                                    if (next) setSeconds('');
+                                }}
+                            />
+                        }
+                        label="Served in race"
+                    />
+                </div>
+
+                <div>
+                    <Label>Description</Label>
                     <TextField
-                        type="number"
+                        multiline
+                        minRows={2}
                         size="small"
-                        sx={{ width: 120 }}
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
+                        fullWidth
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
             </Stack>
@@ -68,21 +141,33 @@ const ManualPenalties = () => {
                 <Button
                     variant="contained"
                     size="small"
-                    disabled={!teamNumber || !value}
-                    onClick={addPenalty}
+                    disabled={!canAdd}
+                    onClick={handleAdd}
                 >
-                    Add penalty/compensation
-                </Button>
-                <Button
-                    variant="outlined"
-                    size="small"
-                    color="error"
-                    disabled={Object.keys(penaltiesManual).length === 0}
-                    onClick={() => setPenaltiesManual({})}
-                >
-                    Clear all
+                    Add penalty
                 </Button>
             </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            <SectionHeader>Penalty list</SectionHeader>
+            {sortedPenalties.length === 0 ? (
+                <Typography variant="body2" sx={{ opacity: 0.5 }}>
+                    No penalties
+                </Typography>
+            ) : (
+                <Box>
+                    {sortedPenalties.map((p) => (
+                        <PenaltyRow
+                            key={p.id}
+                            penalty={p}
+                            onUpdateSeconds={updatePenaltySeconds}
+                            onSetServedInRace={setPenaltyServedInRace}
+                            onDelete={deletePenalty}
+                        />
+                    ))}
+                </Box>
+            )}
 
             <Divider sx={{ my: 3 }} />
 

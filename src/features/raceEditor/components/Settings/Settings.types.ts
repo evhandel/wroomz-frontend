@@ -9,4 +9,8 @@ export interface SettingsData {
     maxStint?: string;
     minForPilotByTeamSize?: Record<number, string>;
     minStintsQuantity?: string;
+    kartHasFixedNumber?: boolean;
+    autoChargePenaltiesForLimits?: boolean;
+    mergeConsecutiveStintsForMax?: boolean;
+    minPilotRest?: string; // minutes in the UI
 }

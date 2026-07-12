@@ -7,4 +7,8 @@ export const colors = [
     'rgb(255, 159, 64)', // Orange
     'rgb(19,156,69)', // Green
     'rgb(54, 162, 235)', // Blue
+    'rgb(0, 191, 165)', // Turquoise
+    'rgb(80, 80, 80)', // Graphite Gray
+    'rgb(173,255,47)', // Lime Green
+    'rgb(220,20,60)', // Crimson
 ];

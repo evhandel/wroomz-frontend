@@ -2,9 +2,11 @@ import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { Box, Alert, CircularProgress } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api, CreateRaceDto } from '../api';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { RaceForm } from '../components/RaceForm/RaceForm';
 import { RaceFormValues } from '../components/RaceForm/RaceForm.types';
+import { useAuth } from '../context/AuthContext';
+import { useSnackbar } from '../context/SnackbarContext';
 
 export function EditRace() {
     const { id } = useParams<{ id: string }>();
@@ -28,6 +30,17 @@ function EditRaceContent({ id }: { id: string }) {
         queryFn: () => api.races.getById(id),
     });
 
+    const { user, isSuperadmin } = useAuth();
+    const { showMessage } = useSnackbar();
+
+    useEffect(() => {
+        if (!race || !user) return;
+        if (!isSuperadmin && user.id !== race.ownerId) {
+            showMessage('You can only edit your own races', 'error');
+            navigate('/', { replace: true });
+        }
+    }, [race, user, isSuperadmin, navigate, showMessage]);
+
     const updateRaceMutation = useMutation({
         mutationFn: (data: CreateRaceDto) => api.races.update(id, data),
         onSuccess: () => navigate('/'),
@@ -38,6 +51,7 @@ function EditRaceContent({ id }: { id: string }) {
             race
                 ? {
                       name: race.name,
+                      organizer: race.organizer,
                       isPublished: race.isPublished,
                   }
                 : undefined,
@@ -72,6 +86,8 @@ function EditRaceContent({ id }: { id: string }) {
             onSubmit={(data) => updateRaceMutation.mutate(data)}
             isPending={updateRaceMutation.isPending}
             isError={updateRaceMutation.isError}
+            currentUserOrganizer={user?.organizer ?? null}
+            isSuperadmin={isSuperadmin}
         />
     );
 }

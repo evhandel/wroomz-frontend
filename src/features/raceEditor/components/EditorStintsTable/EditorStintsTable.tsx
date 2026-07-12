@@ -8,24 +8,22 @@ import Paper from '@mui/material/Paper';
 import { StyledTableCell } from '../../../raceViewer/components/StintsTable/StintsTable.styles';
 import ComboTableCell from '../../../raceViewer/components/StintsTable/components/ComboTableCell/ComboTableCell';
 import { getMinLapTime } from '../../../raceViewer/helpers/getMinLapTime';
-import { useShallow } from 'zustand/react/shallow';
 import { useRaceEditorStore } from '../../store/RaceEditorStoreProvider';
 import { SectionWrapper, SectionHeader } from '../common/styles';
 
 const EditorStintsTable: React.FC = () => {
-    const { stintsAnalysis, results, settingsData } = useRaceEditorStore(
-        useShallow((s) => ({
-            stintsAnalysis: s.stintsAnalysis,
-            results: s.results,
-            settingsData: s.settingsData,
-        }))
+    const stintsAnalysis = useRaceEditorStore((s) => s.stintsAnalysis);
+    const results = useRaceEditorStore((s) => s.results);
+    const maxStint = useRaceEditorStore((s) => Number(s.settingsData.maxStint));
+    const minPitStopLapTime = useRaceEditorStore((s) =>
+        Number(s.settingsData.minPitStopLapTime ?? '0')
+    );
+    const kartHasFixedNumber = useRaceEditorStore(
+        (s) => s.settingsData.kartHasFixedNumber ?? true
     );
     const [activeKart, setActiveKart] = useState<string | null>(null);
 
     const minLapTime = useMemo(() => getMinLapTime(stintsAnalysis), [stintsAnalysis]);
-
-    const maxStint = Number(settingsData.maxStint);
-    const minPitStopLapTime = Number(settingsData.minPitStopLapTime ?? '0');
 
     const stintRows = useMemo(() => {
         if (!stintsAnalysis || !results) return [];
@@ -49,7 +47,10 @@ const EditorStintsTable: React.FC = () => {
         stintRows.forEach((row) => {
             row.forEach((stint) => {
                 if (!stint?.laps?.length) return;
-                if (stint.avgLapExcludingPitExitLap < fAvg) {
+                if (
+                    Number.isFinite(stint.avgLapExcludingPitExitLap) &&
+                    stint.avgLapExcludingPitExitLap < fAvg
+                ) {
                     fAvg = stint.avgLapExcludingPitExitLap;
                 }
                 if (
@@ -73,9 +74,9 @@ const EditorStintsTable: React.FC = () => {
                 <Table sx={{ minWidth: 800 }}>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell align="center">Stint\Team</StyledTableCell>
+                            <StyledTableCell align='center'>Stint\Team</StyledTableCell>
                             {results.map((result) => (
-                                <StyledTableCell key={result.teamNumber} align="center">
+                                <StyledTableCell key={result.teamNumber} align='center'>
                                     <b>{result.teamNumber}</b>
                                 </StyledTableCell>
                             ))}
@@ -92,7 +93,7 @@ const EditorStintsTable: React.FC = () => {
                                             : 'inherit',
                                 }}
                             >
-                                <StyledTableCell align="center">
+                                <StyledTableCell align='center'>
                                     <b>{index + 1}</b>
                                 </StyledTableCell>
                                 {row.map((stint, teamIndex) =>
@@ -110,6 +111,7 @@ const EditorStintsTable: React.FC = () => {
                                                 stintMaxLimit={maxStint}
                                                 activeKart={activeKart}
                                                 setActiveKart={setActiveKart}
+                                                kartHasFixedNumber={kartHasFixedNumber}
                                             />
                                         </StyledTableCell>
                                     ) : (

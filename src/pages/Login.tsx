@@ -10,7 +10,7 @@ import {
     Alert,
     CircularProgress,
 } from '@mui/material';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -134,13 +134,6 @@ export function Login() {
                                 'Log In'
                             )}
                         </Button>
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Link to='/register' style={{ textDecoration: 'none' }}>
-                                <Typography variant='body2' color='primary'>
-                                    Don't have an account? Register
-                                </Typography>
-                            </Link>
-                        </Box>
                     </Box>
                 </Paper>
             </Box>

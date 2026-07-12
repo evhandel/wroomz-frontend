@@ -17,3 +17,13 @@ export interface EditorSnapshot extends CalculatedData {
     stintsByPilots: StintsByPilotsData;
     stintOverrides: StintOverrides;
 }
+
+export interface LiveChangeoverEvent {
+    id: string;
+    capturedAt: string; // ISO timestamp captured at cell finalization (deactivation)
+    team: string; // team name (stintsByPilots key)
+    stintNumber: number; // 1-based, human-facing
+    pilot: string; // pilot who came in
+    kart?: string;
+    previousPilot?: string; // pilot of the previous stint for the same team
+}

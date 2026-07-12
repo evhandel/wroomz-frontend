@@ -2,6 +2,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { ResultItem, ResultsWrapper, Time, Position, TeamNumber, DriverNames } from './Results.styles';
 import { Green, Red } from '../common/styles';
 import { useRaceEditorStore } from '../../store/RaceEditorStoreProvider';
+import { formatTime } from '../../../raceViewer/helpers/format';
 
 const Results = () => {
     const results = useRaceEditorStore((s) => s.results);
@@ -19,7 +20,7 @@ const Results = () => {
                     position++;
                 }
 
-                const time = result.avgTimeTotal;
+                const time = formatTime(result.avgTimeTotal);
 
                 const penaltyPrefix = result.penalty > 0 ? '+' : '';
                 const penaltyPostfix = result.penalty >= 0 ? 'penalty' : 'compensation';

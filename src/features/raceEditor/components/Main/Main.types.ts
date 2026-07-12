@@ -1,6 +1,6 @@
 import type { StintsByPilots } from '@evhandel/wroomz-types';
 
-export { ResultsData, StintAnalysisData, PenaltiesData } from '../../../../types/race';
+export { ResultsData, StintAnalysisData } from '../../../../types/race';
 
 export interface RaceData {
     [key: string]: {

@@ -1,4 +1,9 @@
-import type { RaceResult, StintAnalysis, RacePenalties, RaceSettings } from '@evhandel/wroomz-types';
+import type {
+    RaceResult,
+    StintAnalysis,
+    RacePenalties,
+    RaceSettings,
+} from '@evhandel/wroomz-types';
 
 export { ResultsData, StintAnalysisData } from '../../../types/race';
 
@@ -18,6 +23,10 @@ export const raceData: RaceData = {
         pitStopDetectionTime: 100,
         minPitStopLapTime: 120,
         minStintsQuantity: 4,
+        kartHasFixedNumber: true,
+        autoChargePenaltiesForLimits: true,
+        mergeConsecutiveStintsForMax: false,
+        minPilotRest: 0,
     },
     results: [
         {
@@ -94,31 +103,8 @@ export const raceData: RaceData = {
         },
     ],
     penalties: {
-        penaltiesManual: {
-            '11': 3,
-            '13': 3,
-            '16': 30,
-        },
-        penaltiesByStintLimit: {
-            '1': 70,
-            '4': 0,
-            '7': 47,
-            '8': 22,
-            '10': 0,
-            '11': 56,
-            '13': 0,
-            '16': 0,
-        },
-        penaltiesByPilotLimit: {
-            '1': 0,
-            '4': 0,
-            '7': 0,
-            '8': 0,
-            '10': 0,
-            '11': 0,
-            '13': 0,
-            '16': 0,
-        },
+        items: [],
+        disqualifiedTeams: [],
     },
     stintsAnalysis: {
         '1': [

@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Teams from '../Teams/Teams';
 import StintsByPilots from '../StintsByPilots/StintsByPilots';
-import AutoPenalties from '../AutoPenalties/AutoPenalties';
 import EditorStintsTable from '../EditorStintsTable/EditorStintsTable';
 import StintOverrides from '../StintOverrides/StintOverrides';
 import { useShallow } from 'zustand/react/shallow';
@@ -59,8 +58,6 @@ const MainContent = () => {
 
             {results && (
                 <>
-                    <AutoPenalties />
-
                     <EditorStintsTable />
 
                     <StintOverrides />

@@ -12,4 +12,8 @@ export const defaultSettingsData: SettingsData = {
         5: '30',
         6: '25',
     },
+    kartHasFixedNumber: true,
+    autoChargePenaltiesForLimits: true,
+    mergeConsecutiveStintsForMax: false,
+    minPilotRest: '0',
 };

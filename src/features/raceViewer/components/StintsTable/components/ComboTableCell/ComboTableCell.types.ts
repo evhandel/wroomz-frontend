@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { StintFormatted } from '../../StintsTable.types';
+import { MergedStintMarker } from '../../../../helpers/getMergedStintMarkers';
 
 export interface ComboTableCellProps extends StintFormatted {
     minLapTime: number;
@@ -10,4 +11,6 @@ export interface ComboTableCellProps extends StintFormatted {
     fastestBest: boolean;
     fastestAvg: boolean;
     fastestPit: boolean;
+    kartHasFixedNumber: boolean;
+    mergedMarker?: MergedStintMarker;
 }
