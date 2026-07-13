@@ -7,6 +7,10 @@ WORKDIR /app
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
+# REACT_APP_* vars must be declared as ARG to be visible during `yarn build`.
+ARG REACT_APP_PUBLIC_POSTHOG_KEY
+ENV REACT_APP_PUBLIC_POSTHOG_KEY=$REACT_APP_PUBLIC_POSTHOG_KEY
+
 # Copy package files
 COPY package.json yarn.lock ./
 
