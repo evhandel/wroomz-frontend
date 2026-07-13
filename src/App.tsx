@@ -17,6 +17,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ReauthProvider } from './context/ReauthContext';
 import { SnackbarProvider, useSnackbar } from './context/SnackbarContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { AnalyticsTracker } from './analytics/useAnalytics';
 import { isTokenExpired } from './utils/jwt';
 import { theme } from './theme';
 
@@ -84,6 +85,7 @@ function App() {
                 <AuthProvider>
                     <SnackbarProvider>
                         <Router>
+                            <AnalyticsTracker />
                             <ReauthProvider>
                             <Layout>
                                 <ErrorBoundary>
