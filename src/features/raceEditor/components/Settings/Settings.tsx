@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
@@ -58,7 +58,21 @@ const Settings = () => {
                     </div>
 
                     <FormControlLabel
-                        control={<Switch {...register('mergeConsecutiveStintsForMax')} />}
+                        control={
+                            <Controller
+                                name='mergeConsecutiveStintsForMax'
+                                control={control}
+                                render={({ field }) => (
+                                    <Switch
+                                        inputRef={field.ref}
+                                        name={field.name}
+                                        checked={field.value ?? false}
+                                        onChange={(_, checked) => field.onChange(checked)}
+                                        onBlur={field.onBlur}
+                                    />
+                                )}
+                            />
+                        }
                         label='Count consecutive stints of one pilot as one'
                     />
 
