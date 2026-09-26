@@ -1,11 +1,16 @@
-export const formatTime = (seconds: number, skipZeroMinutes = false, skipZeroMilliseconds = false): string => {
+export const formatTime = (
+    seconds: number,
+    skipZeroMinutes = false,
+    skipZeroMilliseconds = false
+): string => {
     const negative = seconds < 0;
 
-    const positiveSeconts = negative ? seconds * -1 : seconds;
+    // Round before splitting so milliseconds carry into seconds and minutes.
+    const totalMilliseconds = Math.round(Math.abs(seconds) * 1000);
 
-    const minutes = Math.floor(positiveSeconts / 60); // Calculate minutes
-    const remainingSeconds = Math.floor(positiveSeconts % 60); // Remaining seconds (integer part)
-    const milliseconds = Math.floor((positiveSeconts % 1) * 1000); // Milliseconds (fractional part)
+    const minutes = Math.floor(totalMilliseconds / 60000);
+    const remainingSeconds = Math.floor(totalMilliseconds / 1000) % 60;
+    const milliseconds = totalMilliseconds % 1000;
 
     // Pad minutes, seconds, and milliseconds with leading zeros if needed
     const formattedMinutes = String(minutes).padStart(2, '0');
