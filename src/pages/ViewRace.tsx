@@ -1,5 +1,16 @@
-import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Box, Typography, Alert, CircularProgress, Button, Chip, Stack } from '@mui/material';
+import { useParams, useNavigate, Navigate, Link } from 'react-router-dom';
+import {
+    Box,
+    Typography,
+    Alert,
+    CircularProgress,
+    Button,
+    Chip,
+    Stack,
+    IconButton,
+    Tooltip,
+} from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import EditIcon from '@mui/icons-material/Edit';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api';
@@ -65,25 +76,37 @@ function ViewRaceContent({ id }: { id: string }) {
                     px: 8,
                 }}
             >
-                <Box>
-                    <Typography variant='h4' component='h1'>
-                        {race.name}
-                    </Typography>
-                    {isAuthenticated && (
-                        <Stack direction='row' spacing={2} sx={{ mt: 1 }}>
-                            <Chip
-                                label={race.isPublished ? 'Published' : 'Not Published'}
-                                color={race.isPublished ? 'success' : 'default'}
-                                size='small'
-                            />
-                            {race.createdAt && (
-                                <Typography variant='body2' color='text.secondary'>
-                                    Created: {format(parseISO(race.createdAt), 'dd.MM.yyyy')}
-                                </Typography>
-                            )}
-                        </Stack>
-                    )}
-                </Box>
+                <Stack direction='row' spacing={1} alignItems='flex-start'>
+                    <Tooltip title='Back to race list'>
+                        <IconButton
+                            component={Link}
+                            to='/'
+                            aria-label='Back to race list'
+                            sx={{ flexShrink: 0 }}
+                        >
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Box>
+                        <Typography variant='h4' component='h1'>
+                            {race.name}
+                        </Typography>
+                        {isAuthenticated && (
+                            <Stack direction='row' spacing={2} sx={{ mt: 1 }}>
+                                <Chip
+                                    label={race.isPublished ? 'Published' : 'Not Published'}
+                                    color={race.isPublished ? 'success' : 'default'}
+                                    size='small'
+                                />
+                                {race.createdAt && (
+                                    <Typography variant='body2' color='text.secondary'>
+                                        Created: {format(parseISO(race.createdAt), 'dd.MM.yyyy')}
+                                    </Typography>
+                                )}
+                            </Stack>
+                        )}
+                    </Box>
+                </Stack>
 
                 {isAuthenticated && (
                     <Button
