@@ -12,8 +12,15 @@ interface LapEntry {
 
 interface ExternalTooltipHandlerConfig {
     lapByLapRef: { current: LapByLapItem[] };
-    formatValue: (lapData: LapEntry, lapIndex: number, chart: Chart) => string;
+    formatValue: (
+        lapData: LapEntry,
+        lapIndex: number,
+        chart: Chart,
+        leadingVisibleLapData?: LapEntry
+    ) => string;
     background?: string;
+    includeLapZero?: boolean;
+    sortByElapsedTime?: boolean;
 }
 
 export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfig) => {
@@ -48,8 +55,26 @@ export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfi
 
             const lapByLapData = config.lapByLapRef.current;
 
-            tooltip.dataPoints.forEach((dataPoint, i) => {
-                const colors = tooltip.labelColors[i];
+            const rows = tooltip.dataPoints
+                .map((dataPoint, i) => {
+                    const lapIndex = dataPoint.dataIndex - (config.includeLapZero ? 1 : 0);
+                    const isLapZero = config.includeLapZero && dataPoint.dataIndex === 0;
+                    const team = (dataPoint.dataset.label || '').split(' — ')[0];
+                    const lapData = lapByLapData[lapIndex]?.[team];
+
+                    return { colors: tooltip.labelColors[i], lapIndex, isLapZero, team, lapData };
+                })
+                .filter(({ lapData, isLapZero }) => lapData || isLapZero);
+
+            if (config.sortByElapsedTime) {
+                rows.sort(
+                    (a, b) => (a.lapData?.elapsedTime ?? 0) - (b.lapData?.elapsedTime ?? 0)
+                );
+            }
+
+            const leadingVisibleLapData = rows[0]?.lapData;
+
+            rows.forEach(({ colors, lapIndex, team, lapData }) => {
 
                 const span = document.createElement('span');
                 span.style.background = colors.backgroundColor.toString();
@@ -67,20 +92,13 @@ export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfi
                 const td = document.createElement('td');
                 td.style.borderWidth = '0';
 
-                const lapIndex = dataPoint.dataIndex;
-                const label = dataPoint.dataset.label || '';
-                const parsedLabelArray = label.split(' — ');
-                const team = parsedLabelArray[0] || '';
-
-                const lapData =
-                    team && lapByLapData[lapIndex] ? lapByLapData[lapIndex][team] : null;
-
-                if (!lapData) return;
-
-                const valueText = config.formatValue(lapData, lapIndex, chart);
-
+                const valueText = lapData
+                    ? config.formatValue(lapData, lapIndex, chart, leadingVisibleLapData)
+                    : '0.000';
                 const text = document.createTextNode(
-                    `${team} —  ${lapData.pilot}: ${valueText} (kart ${lapData.kart}, stint ${lapData.stint})`
+                    lapData
+                        ? `${team} —  ${lapData.pilot}: ${valueText} (kart ${lapData.kart}, stint ${lapData.stint})`
+                        : `${team} — ${valueText}`
                 );
 
                 td.appendChild(span);

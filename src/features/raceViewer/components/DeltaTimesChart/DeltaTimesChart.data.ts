@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { StintAnalysis } from '@evhandel/wroomz-types';
 import { useRaceData } from '../../data/useRaceData';
 import { buildChartDatasets } from '../../data/buildChartDatasets';
 
@@ -12,14 +13,14 @@ export const useDeltaTimesChartData = (raceId: string) => {
         const { results, stintsAnalysis } = raceDataFromApi;
 
         const maxLaps = results.reduce(
-            (acc: number, result: any) => (result.laps > acc ? result.laps : acc),
+            (acc, result) => (result.laps > acc ? result.laps : acc),
             0
         );
 
         const fastestTeam = results
-            .filter((result: any) => result.laps === maxLaps)
+            .filter((result) => result.laps === maxLaps)
             .reduce(
-                (fastest: any, result: any) =>
+                (fastest, result) =>
                     result.totalTimeWithGapWithoutPenalties <
                     fastest.totalTimeWithGapWithoutPenalties
                         ? result
@@ -30,9 +31,9 @@ export const useDeltaTimesChartData = (raceId: string) => {
         const winnerTeamNumber = fastestTeam.teamNumber;
 
         const winnerElapsedTimesByLaps = stintsAnalysis[winnerTeamNumber].reduce<number[]>(
-            (acc, stintData: any) => [
+            (acc, stintData) => [
                 ...acc,
-                ...stintData.laps.map((lapData: any) => lapData.elapsedTime),
+                ...stintData.laps.map((lapData) => lapData.elapsedTime),
             ],
             []
         );
@@ -44,23 +45,23 @@ export const useDeltaTimesChartData = (raceId: string) => {
         const { labels, datasets } = buildChartDatasets(
             stintsAnalysis,
             results,
-            (teamStints) => {
+            (teamStints: StintAnalysis[]) => {
                 let lapCounter = 0;
                 return teamStints.reduce<number[]>(
-                    (acc, stintData: any) => [
+                    (acc, stintData) => [
                         ...acc,
                         ...stintData.laps.map(
-                            (lapData: any) =>
+                            (lapData) =>
                                 lapData.elapsedTime - averageLapTimeForWinner * ++lapCounter
                         ),
                     ],
-                    []
+                    [0]
                 );
             },
             { cubicInterpolationMode: 'monotone' as const },
             raceDataFromApi.teamsAndPilots
         );
 
-        return { labels, datasets, averageLapTimeForWinner };
+        return { labels: [0, ...labels], datasets, averageLapTimeForWinner };
     }, [raceDataFromApi]);
 };
