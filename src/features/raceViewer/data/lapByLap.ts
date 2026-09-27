@@ -8,6 +8,7 @@ export type LapByLapItem = Record<
         elapsedTime: number;
         pilot: string;
         stint: number;
+        stintCount: number;
         kart: string;
     }
 >;
@@ -33,6 +34,7 @@ export const useLapByLap = (raceId: string) => {
                         elapsedTime: lapData.elapsedTime,
                         pilot: stintData.pilot,
                         stint: stintData.no,
+                        stintCount: data.stintsAnalysis[team].length,
                         kart: stintData.kart || '',
                     };
                 });

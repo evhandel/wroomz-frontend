@@ -2,13 +2,7 @@ import { Chart, TooltipModel } from 'chart.js';
 import { getOrCreateTooltip } from './chartsTooltip';
 import { LapByLapItem } from '../data/lapByLap';
 
-interface LapEntry {
-    lapTime: number;
-    elapsedTime: number;
-    pilot: string;
-    stint: number;
-    kart: string;
-}
+type LapEntry = LapByLapItem[string];
 
 interface ExternalTooltipHandlerConfig {
     lapByLapRef: { current: LapByLapItem[] };
@@ -61,20 +55,32 @@ export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfi
                     const isLapZero = config.includeLapZero && dataPoint.dataIndex === 0;
                     const team = (dataPoint.dataset.label || '').split(' — ')[0];
                     const lapData = lapByLapData[lapIndex]?.[team];
+                    const pointValue = dataPoint.dataset.data[dataPoint.dataIndex];
+                    const startGap =
+                        isLapZero && typeof pointValue === 'number' ? pointValue : 0;
 
-                    return { colors: tooltip.labelColors[i], lapIndex, isLapZero, team, lapData };
+                    return {
+                        colors: tooltip.labelColors[i],
+                        lapIndex,
+                        isLapZero,
+                        team,
+                        lapData,
+                        startGap,
+                    };
                 })
                 .filter(({ lapData, isLapZero }) => lapData || isLapZero);
 
             if (config.sortByElapsedTime) {
                 rows.sort(
-                    (a, b) => (a.lapData?.elapsedTime ?? 0) - (b.lapData?.elapsedTime ?? 0)
+                    (a, b) =>
+                        (a.lapData?.elapsedTime ?? a.startGap) -
+                        (b.lapData?.elapsedTime ?? b.startGap)
                 );
             }
 
             const leadingVisibleLapData = rows[0]?.lapData;
 
-            rows.forEach(({ colors, lapIndex, team, lapData }) => {
+            rows.forEach(({ colors, lapIndex, team, lapData, startGap }) => {
 
                 const span = document.createElement('span');
                 span.style.background = colors.backgroundColor.toString();
@@ -94,10 +100,12 @@ export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfi
 
                 const valueText = lapData
                     ? config.formatValue(lapData, lapIndex, chart, leadingVisibleLapData)
-                    : '0.000';
+                    : startGap.toFixed(3);
+                const stintText =
+                    lapData && lapData.stintCount > 1 ? `, stint ${lapData.stint}` : '';
                 const text = document.createTextNode(
                     lapData
-                        ? `${team} —  ${lapData.pilot}: ${valueText} (kart ${lapData.kart}, stint ${lapData.stint})`
+                        ? `${team} —  ${lapData.pilot}: ${valueText} (kart ${lapData.kart}${stintText})`
                         : `${team} — ${valueText}`
                 );
 

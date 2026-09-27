@@ -2,15 +2,15 @@ import { useRef, useMemo } from 'react';
 import { InteractionModeMap } from 'chart.js';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
-import { useDeltaTimesChartData } from './DeltaTimesChart.data';
+import { useGapEvolutionChartData } from './GapEvolutionChart.data';
 import { createExternalTooltipHandler } from '../../helpers/createChartTooltip';
 import type { LapByLapItem } from '../../data/lapByLap';
 import ChartBase from '../ChartBase/ChartBase';
 
-const DeltaTimesChart = () => {
+const GapEvolutionChart = () => {
     const { id = '' } = useParams<{ id: string }>();
     const theme = useTheme();
-    const chartData = useDeltaTimesChartData(id);
+    const chartData = useGapEvolutionChartData(id);
 
     const lapByLapRef = useRef<LapByLapItem[]>([]);
 
@@ -76,9 +76,9 @@ const DeltaTimesChart = () => {
             chartData={chartData}
             options={options}
             lapByLapRef={lapByLapRef}
-            title="Delta Time Chart (Legend is clickable)"
+            title="Gap Evolution (Legend is clickable)"
         />
     );
 };
 
-export default DeltaTimesChart;
+export default GapEvolutionChart;

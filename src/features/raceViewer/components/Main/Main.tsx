@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack } from '@mui/material';
 import LapTimesChart from '../LapTimesChart/LapTimesChart';
 import Results from '../Results/Results';
-import DeltaTimesChart from '../DeltaTimesChart/DeltaTimesChart';
+import GapEvolutionChart from '../GapEvolutionChart/GapEvolutionChart';
 import StintsTable from '../StintsTable/StintsTable';
 import LapsTable from '../LapsTable/LapsTable';
 import PenaltiesByTeam from '../PenaltiesTable/PenaltiesByTeam';
@@ -18,7 +18,7 @@ const Main: React.FC = () => {
             <Results raceId={id} />
             <StintsTable />
             <PenaltiesByTeam />
-            <DeltaTimesChart />
+            <GapEvolutionChart />
             <LapTimesChart />
             <LapsTable />
         </Stack>

@@ -58,7 +58,7 @@ src/
 │       │   │       └── ComboTableCell/ # Combo cell (value + label)
 │       │   ├── ChartBase/        # Shared chart wrapper
 │       │   ├── LapTimesChart/    # Lap times line chart
-│       │   ├── DeltaTimesChart/  # Delta times chart (gaps between teams)
+│       │   ├── GapEvolutionChart/ # Gap Evolution chart (gaps between teams)
 │       │   ├── PenaltiesTable/   # Penalties breakdown table
 │       │   └── common/styles.ts  # Shared viewer styles
 │       ├── data/                 # useRaceData, stintsAnalysis, lapByLap
@@ -95,7 +95,7 @@ Each component folder may contain the following files:
 - Stints table with average times, best laps, pit stop times
 - Detailed lap-by-lap table
 - Lap times line chart
-- Delta times chart (gaps between teams)
+- Gap Evolution chart (gaps between teams)
 - Penalties table with breakdown by type
 
 ## Routes
@@ -211,5 +211,5 @@ CSV file → CSVUploader (PapaParse) → raw lap data
 ### Viewing a race
 ```
 API: GET /public/races/:id → useRaceData() (React Query + select)
-  → Main → Results, LapsTable, StintsTable, LapTimesChart, DeltaTimesChart, PenaltiesTable
+  → Main → Results, LapsTable, StintsTable, LapTimesChart, GapEvolutionChart, PenaltiesTable
 ```

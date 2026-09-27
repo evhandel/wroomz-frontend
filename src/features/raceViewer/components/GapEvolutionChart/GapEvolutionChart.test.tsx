@@ -6,7 +6,7 @@ import type { Chart, ChartData, TooltipModel } from 'chart.js';
 import type { StintAnalysis } from '@evhandel/wroomz-types';
 import { theme } from '../../../../theme';
 import { useRaceData } from '../../data/useRaceData';
-import DeltaTimesChart from './DeltaTimesChart';
+import GapEvolutionChart from './GapEvolutionChart';
 import LapTimesChart from '../LapTimesChart/LapTimesChart';
 
 jest.mock('../../data/useRaceData', () => ({ useRaceData: jest.fn() }));
@@ -19,21 +19,22 @@ const makeStint = (
     pilot: string,
     kart: string,
     no: number,
-    laps: StintAnalysis['laps']
+    laps: StintAnalysis['laps'],
+    startGap = 0
 ): StintAnalysis => ({
     pilot,
     kart,
     no,
     laps,
-    startGap: 0,
+    startGap,
     startTime: 0,
     endTime: laps[laps.length - 1].elapsedTime,
-    duration: laps.reduce((sum, lap) => sum + lap.time, 0),
+    duration: laps.reduce((sum, lap) => sum + lap.time, startGap),
     avgLapExcludingPitExitLap: 50,
     bestLap: Math.min(...laps.map((lap) => lap.time)),
 });
 
-const renderChart = (component = <DeltaTimesChart />) => {
+const renderChart = (component = <GapEvolutionChart />) => {
     render(
         <ThemeProvider theme={theme}>
             <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -85,10 +86,16 @@ beforeEach(() => {
             ],
             stintsAnalysis: {
                 '1': [
-                    makeStint('Alice', '7', 1, [
-                        { no: 1, time: 40, elapsedTime: 40 },
-                        { no: 2, time: 50, elapsedTime: 90 },
-                    ]),
+                    makeStint(
+                        'Alice',
+                        '7',
+                        1,
+                        [
+                            { no: 1, time: 38.753, elapsedTime: 40 },
+                            { no: 2, time: 50, elapsedTime: 90 },
+                        ],
+                        1.247
+                    ),
                     makeStint('Bea', '8', 2, [{ no: 3, time: 60, elapsedTime: 150 }]),
                 ],
                 '2': [
@@ -102,29 +109,33 @@ beforeEach(() => {
     } as unknown as ReturnType<typeof useRaceData>);
 });
 
-it('starts all delta lines at lap zero without changing real-lap deltas', () => {
+it('starts each line at its starting gap without changing real-lap values', () => {
     const { data } = renderChart();
 
     expect(data.labels).toEqual([0, 1, 2, 3]);
     expect(data.datasets.map((dataset) => dataset.data)).toEqual([
-        [0, -10, -10, 0],
+        [1.247, -10, -10, 0],
         [0, 10, 20],
     ]);
 });
 
-it('shows zero at the start and the correct drivers and deltas on real laps', () => {
+it('shows starting gaps in crossing order and the correct drivers and gaps on real laps', () => {
     const { showTooltip } = renderChart();
 
     const start = showTooltip(0);
     expect(start).toHaveTextContent('Lap #0');
-    expect(start).toHaveTextContent('1 — 0.000');
+    expect(start).toHaveTextContent('1 — 1.247');
     expect(start).toHaveTextContent('2 — 0.000');
+    expect(Array.from(start.querySelectorAll('tbody tr'), (row) => row.textContent)).toEqual([
+        '2 — 0.000',
+        '1 — 1.247',
+    ]);
     expect(start).not.toHaveTextContent('kart');
 
     const firstLap = showTooltip(1);
     expect(firstLap).toHaveTextContent('Lap #1');
     expect(firstLap).toHaveTextContent('Alice: P1 (kart 7, stint 1)');
-    expect(firstLap).toHaveTextContent('Carla: +20.000 (kart 9, stint 1)');
+    expect(firstLap).toHaveTextContent('Carla: +20.000 (kart 9)');
 
     const lastLap = showTooltip(3);
     expect(lastLap).toHaveTextContent('Lap #3');
@@ -132,10 +143,22 @@ it('shows zero at the start and the correct drivers and deltas on real laps', ()
     expect(lastLap).not.toHaveTextContent('Carla');
 });
 
+it('falls back to zero when the starting gap is missing', () => {
+    const { data: raceData } = mockUseRaceData('test-race');
+    delete (raceData!.stintsAnalysis['1'][0] as Partial<StintAnalysis>).startGap;
+
+    const { data, showTooltip } = renderChart();
+
+    expect(data.datasets[0].data).toEqual([0, -10, -10, 0]);
+    expect(showTooltip(0)).toHaveTextContent('1 — 0.000');
+});
+
 it('keeps the lap-time chart and its tooltip starting at lap one', () => {
     const { data, showTooltip } = renderChart(<LapTimesChart />);
 
     expect(data.labels).toEqual([1, 2, 3]);
-    expect(data.datasets[0].data).toEqual([40, 50, 60]);
-    expect(showTooltip(0)).toHaveTextContent('Alice: 40.000 (kart 7, stint 1)');
+    expect(data.datasets[0].data).toEqual([38.753, 50, 60]);
+    const firstLap = showTooltip(0);
+    expect(firstLap).toHaveTextContent('Alice: 38.753 (kart 7, stint 1)');
+    expect(firstLap).toHaveTextContent('Carla: 60.000 (kart 9)');
 });

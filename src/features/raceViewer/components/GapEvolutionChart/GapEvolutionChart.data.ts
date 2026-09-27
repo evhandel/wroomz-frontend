@@ -3,7 +3,7 @@ import type { StintAnalysis } from '@evhandel/wroomz-types';
 import { useRaceData } from '../../data/useRaceData';
 import { buildChartDatasets } from '../../data/buildChartDatasets';
 
-export const useDeltaTimesChartData = (raceId: string) => {
+export const useGapEvolutionChartData = (raceId: string) => {
     const { data: raceDataFromApi } = useRaceData(raceId);
 
     return useMemo(() => {
@@ -55,7 +55,7 @@ export const useDeltaTimesChartData = (raceId: string) => {
                                 lapData.elapsedTime - averageLapTimeForWinner * ++lapCounter
                         ),
                     ],
-                    [0]
+                    [teamStints[0]?.startGap ?? 0]
                 );
             },
             { cubicInterpolationMode: 'monotone' as const },
