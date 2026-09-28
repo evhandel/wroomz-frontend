@@ -20,14 +20,20 @@ const GapEvolutionChart = () => {
                 lapByLapRef,
                 includeLapZero: true,
                 sortByElapsedTime: true,
-                formatValue: (lapData, lapIndex, _chart, leadingVisibleLapData = lapData) => {
+                formatValue: (lapData, lapIndex, chart, leadingVisibleLapData = lapData) => {
                     if (lapData === leadingVisibleLapData) {
                         // Hidden teams still count towards the position on this lap.
-                        const position =
-                            Object.values(lapByLapRef.current[lapIndex]).filter(
-                                (entry) => entry.elapsedTime < lapData.elapsedTime
-                            ).length + 1;
-                        return `P${position}`;
+                        const teamsAhead =
+                            lapIndex === -1
+                                ? chart.data.datasets.filter(
+                                      ({ data }) =>
+                                          typeof data[0] === 'number' &&
+                                          data[0] < lapData.elapsedTime
+                                  ).length
+                                : Object.values(lapByLapRef.current[lapIndex]).filter(
+                                      (entry) => entry.elapsedTime < lapData.elapsedTime
+                                  ).length;
+                        return `P${teamsAhead + 1}`;
                     }
 
                     const gap = lapData.elapsedTime - leadingVisibleLapData.elapsedTime;

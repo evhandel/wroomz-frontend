@@ -54,10 +54,14 @@ export const createExternalTooltipHandler = (config: ExternalTooltipHandlerConfi
                     const lapIndex = dataPoint.dataIndex - (config.includeLapZero ? 1 : 0);
                     const isLapZero = config.includeLapZero && dataPoint.dataIndex === 0;
                     const team = (dataPoint.dataset.label || '').split(' — ')[0];
-                    const lapData = lapByLapData[lapIndex]?.[team];
                     const pointValue = dataPoint.dataset.data[dataPoint.dataIndex];
                     const startGap =
                         isLapZero && typeof pointValue === 'number' ? pointValue : 0;
+                    const lapDetails = lapByLapData[isLapZero ? 0 : lapIndex]?.[team];
+                    const lapData =
+                        isLapZero && lapDetails
+                            ? { ...lapDetails, elapsedTime: startGap }
+                            : lapDetails;
 
                     return {
                         colors: tooltip.labelColors[i],

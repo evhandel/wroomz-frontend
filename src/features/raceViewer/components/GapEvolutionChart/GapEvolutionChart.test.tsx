@@ -51,15 +51,16 @@ const renderChart = (component = <GapEvolutionChart />) => {
     }
 
     const showTooltip = (dataIndex: number) => {
-        const chart = { canvas: screen.getByTestId('race-chart'), width: 600 } as Chart;
+        const chart = { canvas: screen.getByTestId('race-chart'), width: 600, data } as Chart;
+        const visibleDatasets = data.datasets.filter(
+            (dataset) => !dataset.hidden && dataset.data[dataIndex] !== undefined
+        );
         const tooltip = {
             opacity: 1,
             title: [String(data.labels?.[dataIndex])],
             body: [{}],
-            dataPoints: data.datasets
-                .filter((dataset) => dataset.data[dataIndex] !== undefined)
-                .map((dataset) => ({ dataset, dataIndex })),
-            labelColors: data.datasets.map(() => ({
+            dataPoints: visibleDatasets.map((dataset) => ({ dataset, dataIndex })),
+            labelColors: visibleDatasets.map(() => ({
                 backgroundColor: 'red',
                 borderColor: 'red',
             })),
@@ -119,18 +120,15 @@ it('starts each line at its starting gap without changing real-lap values', () =
     ]);
 });
 
-it('shows starting gaps in crossing order and the correct drivers and gaps on real laps', () => {
+it('shows first-lap details with starting positions and gaps at lap zero', () => {
     const { showTooltip } = renderChart();
 
     const start = showTooltip(0);
     expect(start).toHaveTextContent('Lap #0');
-    expect(start).toHaveTextContent('1 — 1.247');
-    expect(start).toHaveTextContent('2 — 0.000');
     expect(Array.from(start.querySelectorAll('tbody tr'), (row) => row.textContent)).toEqual([
-        '2 — 0.000',
-        '1 — 1.247',
+        '2 —  Carla: P1 (kart 9)',
+        '1 —  Alice: +1.247 (kart 7, stint 1)',
     ]);
-    expect(start).not.toHaveTextContent('kart');
 
     const firstLap = showTooltip(1);
     expect(firstLap).toHaveTextContent('Lap #1');
@@ -143,6 +141,27 @@ it('shows starting gaps in crossing order and the correct drivers and gaps on re
     expect(lastLap).not.toHaveTextContent('Carla');
 });
 
+it('counts hidden teams for the starting position and measures gaps from the visible leader', () => {
+    const { data: raceData } = mockUseRaceData('test-race');
+    raceData!.results.push({
+        ...raceData!.results[1],
+        teamNumber: '3',
+        laps: 1,
+        totalTimeWithGapWithoutPenalties: 70,
+    });
+    raceData!.stintsAnalysis['3'] = [
+        makeStint('Dana', '10', 1, [{ no: 1, time: 67.426, elapsedTime: 70 }], 2.574),
+    ];
+
+    const { data, showTooltip } = renderChart();
+    data.datasets[1].hidden = true;
+
+    const start = showTooltip(0);
+    expect(start).toHaveTextContent('Alice: P2 (kart 7, stint 1)');
+    expect(start).toHaveTextContent('Dana: +1.327 (kart 10)');
+    expect(start).not.toHaveTextContent('Carla');
+});
+
 it('falls back to zero when the starting gap is missing', () => {
     const { data: raceData } = mockUseRaceData('test-race');
     delete (raceData!.stintsAnalysis['1'][0] as Partial<StintAnalysis>).startGap;
@@ -150,7 +169,7 @@ it('falls back to zero when the starting gap is missing', () => {
     const { data, showTooltip } = renderChart();
 
     expect(data.datasets[0].data).toEqual([0, -10, -10, 0]);
-    expect(showTooltip(0)).toHaveTextContent('1 — 0.000');
+    expect(showTooltip(0)).toHaveTextContent('Alice: P1 (kart 7, stint 1)');
 });
 
 it('keeps the lap-time chart and its tooltip starting at lap one', () => {
